@@ -1,6 +1,8 @@
 package org.meerkatdev.redditroulette;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -13,14 +15,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.meerkatdev.redditroulette.dummy.DummyContent;
+import org.meerkatdev.redditroulette.utils.Tags;
 
 /**
  * A fragment representing a single Item detail screen.
- * This fragment is either contained in a {@link ItemListActivity}
- * in two-pane mode (on tablets) or a {@link ItemDetailActivity}
+ * This fragment is either contained in a {@link SubredditsActivity}
+ * in two-pane mode (on tablets) or a {@link PostActivity}
  * on handsets.
  */
-public class ItemDetailFragment extends Fragment {
+public class PostFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -36,7 +39,7 @@ public class ItemDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemDetailFragment() {
+    public PostFragment() {
     }
 
     @Override
@@ -44,13 +47,14 @@ public class ItemDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
+            SharedPreferences sharedPref = getActivity().getSharedPreferences("oauth", Context.MODE_PRIVATE);
+            if(sharedPref.contains(Tags.ACCESS_TOKEN)) {
+
+            }
             mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.content);
             }

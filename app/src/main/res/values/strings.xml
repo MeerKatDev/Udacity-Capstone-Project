@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">RedditRoulette</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+    <string name="sign_in_to_reddit">Sign In to Reddit</string>
+    <string name="as_guest_to_reddit">Guest session</string>
 </resources>
