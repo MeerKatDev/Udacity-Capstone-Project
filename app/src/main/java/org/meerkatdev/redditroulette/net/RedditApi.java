@@ -6,7 +6,9 @@ import android.util.Base64;
 import android.util.Log;
 
 import org.meerkatdev.redditroulette.R;
+import org.meerkatdev.redditroulette.utils.Tags;
 
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,6 +20,8 @@ public class RedditApi implements RedditConstants {
 
     private static final String CLIENT_ID = "a0yCeVL5YxKt_Q";
     private static final String REDIRECT_URI = "http://localhost:4321";
+    private static final String RESPONSE_TYPE = "code";
+    private static final String PERMANENT = "permanent";
     private static final String SCOPE = "flair,mysubreddits,read";
     private static final String API_REQUESTS_BASE_PATH = "https://oauth.reddit.com/";
     private static final String API_REQUESTS_BASE_PATH_V1 = "https://oauth.reddit.com/api/v1";
@@ -28,11 +32,28 @@ public class RedditApi implements RedditConstants {
         return Uri.parse(REDDIT_API_BASEPATH).buildUpon()
                 .appendPath("authorize")
                 .appendQueryParameter(CLIENT_ID_KEY, CLIENT_ID)
-                .appendQueryParameter(RESPONSE_TYPE_KEY, "code")
+                .appendQueryParameter(RESPONSE_TYPE_KEY, RESPONSE_TYPE)
                 .appendQueryParameter(STATE_KEY, randomString)
                 .appendQueryParameter(REDIRECT_URI_KEY, REDIRECT_URI)
-                .appendQueryParameter(DURATION_KEY, "permanent")
+                .appendQueryParameter(DURATION_KEY, PERMANENT)
                 .appendQueryParameter(SCOPE_KEY, SCOPE)
+                .build();
+    }
+
+    static Request getRefreshTokenRequest(Context ctx, String refreshToken) {
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("grant_type", "refresh_token")
+                .add("refresh_token", refreshToken)
+                .build();
+
+        String accessTokenUrl = getAuthorizationUrl();
+
+        return new Request.Builder()
+                .addHeader("User-Agent", ctx.getResources().getString(R.string.app_name))
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .url(accessTokenUrl)
+                .post(requestBody)
                 .build();
     }
 
@@ -41,22 +62,27 @@ public class RedditApi implements RedditConstants {
         String authString = CLIENT_ID + ":";
         String encodedAuthString = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
 
-        MediaType mediumType = MediaType.parse("application/x-www-form-urlencoded");
+        RequestBody requestBody = new FormBody.Builder()
+                .add("grant_type", "authorization_code")
+                .add("code", code)
+                .add("redirect_uri", REDIRECT_URI)
+                .build();
 
-        RequestBody requestBody = RequestBody.Companion.create(
-                "grant_type=authorization_code&code=" + code +
-                        "&redirect_uri=" + REDIRECT_URI, mediumType);
-
-        String accessTokenUrl = Uri.parse(REDDIT_API_BASEPATH).buildUpon()
-                .appendPath("access_token")
-                .build().toString();
+        String accessTokenUrl = getAuthorizationUrl();
 
         return new Request.Builder()
                 .addHeader("User-Agent", ctx.getResources().getString(R.string.app_name))
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Authorization", "Basic " + encodedAuthString)
                 .url(accessTokenUrl)
                 .post(requestBody)
                 .build();
+    }
+
+    private static String getAuthorizationUrl() {
+        return Uri.parse(REDDIT_API_BASEPATH).buildUpon()
+                .appendPath(Tags.ACCESS_TOKEN)
+                .build().toString();
     }
 
     public static Request getSubscribedSubreddits(String authToken) {

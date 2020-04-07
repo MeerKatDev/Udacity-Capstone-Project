@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void tryToGoAsRegisteredUser() {
-        SharedPreferences oauthPreference = getSharedPreferences("oauth", Context.MODE_PRIVATE);
+        SharedPreferences oauthPreference = getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
         if(oauthPreference.contains(Tags.ACCESS_TOKEN)) {
             String accessToken = oauthPreference.getString(Tags.ACCESS_TOKEN, "");
             Intent viewIntent = new Intent(this, SubredditsActivity.class);
@@ -64,11 +64,18 @@ public class MainActivity extends AppCompatActivity {
         Log.d(Tags.LIFECYCLE, "onResume");
         super.onResume();
         Intent intent = getIntent();
+        if(intent != null && intent.getExtras() != null
+                && intent.getExtras().containsKey("error")) {
+            // Splash screen!
+            Log.e(TAG, "Message: " + intent.getStringExtra("error"));
+        }
         if(intent != null && intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+            Log.e(TAG, "Going as registered user");
             OAuthHandler handler = new OAuthHandler(this);
             handler.handleReturnUri(intent.getData(), randomString);
             tryToGoAsRegisteredUser();
         }
+
     }
 
 }

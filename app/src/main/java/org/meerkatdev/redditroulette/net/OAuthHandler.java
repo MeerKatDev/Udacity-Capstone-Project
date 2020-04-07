@@ -50,6 +50,37 @@ public class OAuthHandler {
         }
     }
 
+    private void saveOauthDataFromJson(Context ctx, String textResponse) {
+        JSONObject data;
+        try {
+            data = new JSONObject(textResponse);
+            SharedPreferences sharedPref = ctx.getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
+            String accessToken = data.getString(Tags.ACCESS_TOKEN);
+            String scope = data.getString("scope");
+            String refreshToken = data.optString("refresh_token", "");
+            String expiresIn = data.getString("expires_in");
+            String tokenType = data.getString("token_type");
+
+            Log.d(TAG, "Access Token = " + accessToken);
+            Log.d(TAG, "Refresh Token = " + refreshToken);
+            Log.d(TAG, "expiresIn = " + expiresIn);
+            Log.d(TAG, "tokenType = " + tokenType);
+            Log.d(TAG, "scope = " + scope);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(Tags.ACCESS_TOKEN, accessToken);
+            editor.putString("scope", scope);
+            editor.putString("token_type", tokenType);
+            editor.putString("expires_in", expiresIn);
+            if(!refreshToken.isEmpty())
+                editor.putString("refresh_token", refreshToken);
+            editor.apply();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getAccessToken(String code){
 
         Log.d(TAG, "Getting access token!");
@@ -65,35 +96,8 @@ public class OAuthHandler {
             @SuppressLint("ApplySharedPref")
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String json = Objects.requireNonNull(response.body(), "body is null").string();
-
-                JSONObject data = null;
-
-                try {
-                    data = new JSONObject(json);
-                    String accessToken = data.optString(Tags.ACCESS_TOKEN);
-                    String scope = data.optString("scope");
-                    String refreshToken = data.optString("refresh_token");
-                    String expiresIn = data.optString("expires_in");
-                    String tokenType = data.optString("token_type");
-
-                    Log.d(TAG, "Access Token = " + accessToken);
-                    Log.d(TAG, "Refresh Token = " + refreshToken);
-                    Log.d(TAG, "expiresIn = " + expiresIn);
-                    Log.d(TAG, "tokenType = " + tokenType);
-                    Log.d(TAG, "scope = " + scope);
-
-
-                    SharedPreferences sharedPref = ctx.getSharedPreferences("oauth", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString(Tags.ACCESS_TOKEN, accessToken);
-                    editor.putString("refresh_token", refreshToken);
-                    editor.putString("scope", scope);
-                    editor.putString("token_type", tokenType);
-                    editor.putString("expires_in", expiresIn);
-                    editor.commit();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(response.body() != null) {
+                    saveOauthDataFromJson(ctx, response.body().string());
                 }
             }
         });

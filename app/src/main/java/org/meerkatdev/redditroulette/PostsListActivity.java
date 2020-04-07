@@ -21,12 +21,12 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link SubredditsActivity}.
  */
-public class PostActivity extends AppCompatActivity {
+public class PostsListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
+        setContentView(R.layout.activity_posts_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -58,9 +58,9 @@ public class PostActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(PostFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(PostFragment.ARG_ITEM_ID));
-            PostFragment fragment = new PostFragment();
+            arguments.putString(PostsListFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(PostsListFragment.ARG_ITEM_ID));
+            PostsListFragment fragment = new PostsListFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.item_detail_container, fragment)

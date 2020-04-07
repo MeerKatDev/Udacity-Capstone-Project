@@ -11,6 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".PreferencesActivity"
+            android:label="@string/title_activity_preferences"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -20,10 +23,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="localhost"
-                    android:scheme="http"
+                <data
+                    android:host="localhost"
+                    android:path="/"
                     android:port="4321"
-                    android:path="/" />
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
@@ -53,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PostActivity"
+            android:name=".PostsListActivity"
             android:label="@string/title_item_detail"
             android:parentActivityName=".SubredditsActivity"
             android:theme="@style/AppTheme.NoActionBar">
