@@ -9,4 +9,5 @@ public class Tags {
     public static final String SUBREDDIT_ID = "subreddit_id";
     public static final String SUBREDDIT_NAME = "subreddit_name";
 
+    public static final String POST = "post";
 }

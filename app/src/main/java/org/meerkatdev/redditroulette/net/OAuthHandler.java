@@ -29,6 +29,7 @@ import okhttp3.Response;
 public class OAuthHandler {
 
     final Context ctx;
+    String accessToken;
 
     public OAuthHandler(Context ctx) {
         this.ctx = ctx;
@@ -55,7 +56,7 @@ public class OAuthHandler {
         try {
             data = new JSONObject(textResponse);
             SharedPreferences sharedPref = ctx.getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
-            String accessToken = data.getString(Tags.ACCESS_TOKEN);
+            accessToken = data.getString(Tags.ACCESS_TOKEN);
             String scope = data.getString("scope");
             String refreshToken = data.optString("refresh_token", "");
             String expiresIn = data.getString("expires_in");
@@ -79,6 +80,10 @@ public class OAuthHandler {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public void getAccessToken(String code){

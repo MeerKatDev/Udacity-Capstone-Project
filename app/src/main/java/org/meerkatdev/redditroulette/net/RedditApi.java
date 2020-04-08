@@ -86,21 +86,32 @@ public class RedditApi implements RedditConstants {
 
     public static Request getRandomSubredditArticle(String subreddit, String authToken) {
         Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
-        String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/random.json").build().toString();
+        String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/random.json")
+                .build().toString();
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
+    }
 
+    public static Request getArticleComments(String subreddit, String articleId, String authToken) {
+        Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
+        String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/comments/"+articleId+"/")
+                //.appendQueryParameter("limit", "10")
+                .build().toString();
+        return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
 
 
     public static Request getSubredditArticles(String subreddit, String authToken) {
         Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
-        String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/new.json").appendQueryParameter("limit", "10").build().toString();
+        String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/new.json")
+                .appendQueryParameter("limit", "10")
+                .build().toString();
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
 
     public static Request getSubscribedSubreddits(String authToken) {
         Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
-        String builtRequestUrl = accessTokenUrl.appendEncodedPath("subreddits/mine/subscriber").build().toString();
+        String builtRequestUrl = accessTokenUrl.appendEncodedPath("subreddits/mine/subscriber")
+                .build().toString();
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
 

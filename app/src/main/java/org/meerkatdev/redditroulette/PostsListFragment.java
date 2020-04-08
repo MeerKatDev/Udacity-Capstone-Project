@@ -1,33 +1,25 @@
 package org.meerkatdev.redditroulette;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+
 import org.jetbrains.annotations.NotNull;
 import org.meerkatdev.redditroulette.adapters.PostRecyclerViewAdapter;
-import org.meerkatdev.redditroulette.adapters.SubredditRecyclerViewAdapter;
 import org.meerkatdev.redditroulette.data.Post;
-import org.meerkatdev.redditroulette.data.Subreddit;
 import org.meerkatdev.redditroulette.net.RedditApi;
 import org.meerkatdev.redditroulette.utils.JSONUtils;
 import org.meerkatdev.redditroulette.utils.Tags;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
