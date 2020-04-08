@@ -24,7 +24,6 @@ public class RedditApi implements RedditConstants {
     private static final String PERMANENT = "permanent";
     private static final String SCOPE = "flair,mysubreddits,read";
     private static final String API_REQUESTS_BASE_PATH = "https://oauth.reddit.com/";
-    private static final String API_REQUESTS_BASE_PATH_V1 = "https://oauth.reddit.com/api/v1";
 
     public static OkHttpClient client = new OkHttpClient();
 
@@ -83,6 +82,20 @@ public class RedditApi implements RedditConstants {
         return Uri.parse(REDDIT_API_BASEPATH).buildUpon()
                 .appendPath(Tags.ACCESS_TOKEN)
                 .build().toString();
+    }
+
+    public static Request getRandomSubredditArticle(String subreddit, String authToken) {
+        Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
+        String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/random.json").build().toString();
+        return generatedAuthorizedRequest(builtRequestUrl, authToken);
+
+    }
+
+
+    public static Request getSubredditArticles(String subreddit, String authToken) {
+        Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
+        String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/new.json").appendQueryParameter("limit", "10").build().toString();
+        return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
 
     public static Request getSubscribedSubreddits(String authToken) {

@@ -1,6 +1,7 @@
 package org.meerkatdev.redditroulette;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -40,7 +41,8 @@ import okhttp3.Response;
  */
 public class SubredditsActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = SubredditsActivity.class.getSimpleName();
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -72,19 +74,17 @@ public class SubredditsActivity extends AppCompatActivity {
         // guest!
         Request request = RedditApi.getApiSimpleRequest("subreddits", "popular", accessToken);
 
-        RedditApi.client.newCall(request).enqueue(new RedditCallback(this).invoke());
-
-
+        RedditApi.client.newCall(request).enqueue(new RedditCallback(this, accessToken).invoke());
          //   mTwoPane = getResources().getBoolean(R.bool.is_tablet);
-
-
     }
 
     private class RedditCallback {
         private SubredditsActivity activityCtx;
+        private String mAccessToken;
 
-        public RedditCallback(SubredditsActivity activityCtx) {
+        public RedditCallback(SubredditsActivity activityCtx, String accessToken) {
             this.activityCtx = activityCtx;
+            this.mAccessToken = accessToken;
         }
 
         public Callback invoke() {
@@ -121,8 +121,8 @@ public class SubredditsActivity extends AppCompatActivity {
         }
 
         private void setupRecyclerView(ArrayList<Subreddit> subreddits) {
-            RecyclerView recyclerView = findViewById(R.id.item_list);
-            recyclerView.setAdapter(new SubredditRecyclerViewAdapter(activityCtx, subreddits, mTwoPane));
+            RecyclerView recyclerView = findViewById(R.id.rv_subreddits);
+            recyclerView.setAdapter(new SubredditRecyclerViewAdapter(activityCtx, subreddits, mTwoPane, mAccessToken));
         }
     }
 }

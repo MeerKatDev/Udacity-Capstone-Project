@@ -11,9 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".PostViewActivity"></activity>
         <activity
             android:name=".PreferencesActivity"
-            android:label="@string/title_activity_preferences"></activity>
+            android:label="@string/title_activity_preferences" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -31,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".SubredditWidget">
+        <receiver android:name=".widgets.SubredditWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -41,7 +42,7 @@
                 android:resource="@xml/subreddit_widget_info" />
         </receiver>
 
-        <activity android:name=".SubredditWidgetConfigureActivity">
+        <activity android:name=".widgets.SubredditWidgetConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

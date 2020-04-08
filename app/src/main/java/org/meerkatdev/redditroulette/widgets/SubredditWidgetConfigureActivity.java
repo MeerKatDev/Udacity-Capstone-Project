@@ -1,4 +1,4 @@
-package org.meerkatdev.redditroulette;
+package org.meerkatdev.redditroulette.widgets;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import org.meerkatdev.redditroulette.R;
+
 /**
  * The configuration screen for the {@link SubredditWidget SubredditWidget} AppWidget.
  */
 public class SubredditWidgetConfigureActivity extends Activity {
 
-    private static final String PREFS_NAME = "org.meerkatdev.redditroulette.SubredditWidget";
+    private static final String PREFS_NAME = "org.meerkatdev.redditroulette.widgets.SubredditWidget";
     private static final String PREF_PREFIX_KEY = "appwidget_";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     EditText mAppWidgetText;

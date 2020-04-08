@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorAccent"
     android:orientation="horizontal"
-    android:padding="8dp"
     android:layout_marginVertical="8dp"
     android:elevation="8dp"
     android:layout_height="wrap_content"

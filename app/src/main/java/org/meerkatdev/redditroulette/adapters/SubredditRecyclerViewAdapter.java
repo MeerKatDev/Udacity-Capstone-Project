@@ -28,6 +28,7 @@ public class SubredditRecyclerViewAdapter
     private final SubredditsActivity mParentActivity;
     private final List<Subreddit> mValues;
     private boolean mTwoPane;
+    private final String mAccessToken;
 
     private final View.OnClickListener mOnClickListener = view ->
         onClickExt((Subreddit)view.getTag(), view.getContext());
@@ -35,8 +36,8 @@ public class SubredditRecyclerViewAdapter
     private void onClickExt(Subreddit item, Context context) {
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putString(Tags.SUBREDDIT_ID, item.redditId);
             arguments.putString(Tags.SUBREDDIT_NAME, item.name);
+            arguments.putString(Tags.ACCESS_TOKEN, mAccessToken);
             PostsListFragment fragment = new PostsListFragment();
             fragment.setArguments(arguments);
             mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -45,25 +46,27 @@ public class SubredditRecyclerViewAdapter
         } else {
             Intent intent = new Intent(context, PostsListActivity.class);
             // Sending info about subreddit
-            intent.putExtra(Tags.SUBREDDIT_ID, item.redditId);
             intent.putExtra(Tags.SUBREDDIT_NAME, item.name);
+            intent.putExtra(Tags.ACCESS_TOKEN, mAccessToken);
             context.startActivity(intent);
         }
     }
 
     public SubredditRecyclerViewAdapter(SubredditsActivity parent,
                                         List<Subreddit> items,
-                                        boolean twoPane) {
+                                        boolean twoPane,
+                                        String accessToken) {
         mValues = items;
         mParentActivity = parent;
         mTwoPane = twoPane;
+        mAccessToken = accessToken;
     }
 
     @NotNull
     @Override
     public SubredditViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.subreddit_list_content, parent, false);
+                .inflate(R.layout.item_subreddit_list, parent, false);
         return new SubredditViewHolder(view);
     }
 
@@ -72,6 +75,7 @@ public class SubredditRecyclerViewAdapter
         holder.mIdView.setText(mValues.get(position).redditId);
         holder.mContentView.setText(mValues.get(position).name);
         String imagePath = mValues.get(position).iconImg;
+
         if(imagePath != null && !imagePath.isEmpty())
             Picasso.get().load(imagePath).into(holder.mIconView);
         else

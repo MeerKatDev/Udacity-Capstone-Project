@@ -1,6 +1,7 @@
 package org.meerkatdev.redditroulette.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,15 +9,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import org.meerkatdev.redditroulette.PostsListActivity;
 import org.meerkatdev.redditroulette.R;
-import org.meerkatdev.redditroulette.SubredditsActivity;
 import org.meerkatdev.redditroulette.adapters.viewholders.PostViewHolder;
-import org.meerkatdev.redditroulette.adapters.viewholders.SubredditViewHolder;
 import org.meerkatdev.redditroulette.data.Post;
-import org.meerkatdev.redditroulette.data.Subreddit;
 
 import java.util.List;
 
@@ -25,6 +21,7 @@ public class PostRecyclerViewAdapter
 
     private List<Post> mValues;
     private PostsListActivity mParentActivity;
+    int noPosts;
 
     private final View.OnClickListener mOnClickListener = view ->
             onClickExt((Post) view.getTag(), view.getContext());
@@ -33,26 +30,36 @@ public class PostRecyclerViewAdapter
 
     }
 
+
+    public void setData(List<Post> _elements) {
+        mValues = _elements;
+        noPosts = _elements.size();
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.posts_list_content, parent, false);
+                .inflate(R.layout.item_posts_list, parent, false);
         return new PostViewHolder(view);
     }
 
 
-    public PostRecyclerViewAdapter(PostsListActivity parent,
-                                        List<Post> items) {
-        mValues = items;
+    public PostRecyclerViewAdapter(PostsListActivity parent){
+                                        //, List<Post> items) {
+        noPosts = 0;
         mParentActivity = parent;
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
+        Log.d("rv",  "position: " + position);
         holder.mTitleView.setText(mValues.get(position).title);
         holder.mContentView.setText(mValues.get(position).content);
+        holder.mLinkView.setText(mValues.get(position).link);
+        holder.mAuthorView.setText(mValues.get(position).author);
 
         holder.itemView.setTag(mValues.get(position));
         holder.itemView.setOnClickListener(mOnClickListener);
@@ -61,7 +68,7 @@ public class PostRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return 0;
+        return noPosts;
     }
 }
 

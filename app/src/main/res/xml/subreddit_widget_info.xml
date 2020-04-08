@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="org.meerkatdev.redditroulette.SubredditWidgetConfigureActivity"
+    android:configure="org.meerkatdev.redditroulette.widgets.SubredditWidgetConfigureActivity"
     android:initialKeyguardLayout="@layout/subreddit_widget"
     android:initialLayout="@layout/subreddit_widget"
     android:minWidth="40dp"

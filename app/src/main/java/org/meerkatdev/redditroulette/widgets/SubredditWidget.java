@@ -1,9 +1,11 @@
-package org.meerkatdev.redditroulette;
+package org.meerkatdev.redditroulette.widgets;
 
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.widget.RemoteViews;
+
+import org.meerkatdev.redditroulette.R;
 
 /**
  * Implementation of App Widget functionality.
