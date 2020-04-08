@@ -87,8 +87,10 @@ public class SubredditsListFragment extends Fragment {
 
         Request request = RedditApi.getApiSimpleRequest("subreddits", "popular", accessToken);
 
-        sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-        viewAdapter.setViewModel(sharedViewModel);
+        if(mTwoPane) {
+            sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+            viewAdapter.setViewModel(sharedViewModel);
+        }
         RedditApi.client.newCall(request).enqueue(new Callback() {
 
             @Override
@@ -106,8 +108,10 @@ public class SubredditsListFragment extends Fragment {
 
                     if (!elements.isEmpty())
                         parentActivity.runOnUiThread(() -> {
-                            Log.d(TAG, "Updating!");
-                            sharedViewModel.saveSubreddits(elements);
+                            if(mTwoPane) {
+                                Log.d(TAG, "Updating!");
+                                sharedViewModel.saveSubreddits(elements);
+                            }
                             viewAdapter.setData(elements);
                         });
                 }
