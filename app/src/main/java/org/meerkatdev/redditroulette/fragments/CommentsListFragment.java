@@ -1,4 +1,4 @@
-package org.meerkatdev.redditroulette;
+package org.meerkatdev.redditroulette.fragments;
 
 import androidx.fragment.app.Fragment;
 

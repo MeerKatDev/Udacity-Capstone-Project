@@ -13,9 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.meerkatdev.redditroulette.PostsListActivity;
-import org.meerkatdev.redditroulette.PostsListFragment;
+import org.meerkatdev.redditroulette.SubredditsListActivity;
+import org.meerkatdev.redditroulette.fragments.PostsListFragment;
 import org.meerkatdev.redditroulette.R;
-import org.meerkatdev.redditroulette.SubredditsActivity;
 import org.meerkatdev.redditroulette.adapters.viewholders.SubredditViewHolder;
 import org.meerkatdev.redditroulette.data.Subreddit;
 import org.meerkatdev.redditroulette.utils.Tags;
@@ -23,26 +23,20 @@ import org.meerkatdev.redditroulette.utils.Tags;
 import java.util.List;
 
 public class SubredditRecyclerViewAdapter
-        extends RecyclerView.Adapter<SubredditViewHolder> {
+        extends RecyclerView.Adapter<SubredditViewHolder> implements RVAdapter<Subreddit> {
 
-    private final SubredditsActivity mParentActivity;
-    private final List<Subreddit> mValues;
+    private final SubredditsListActivity mParentActivity;
+    private List<Subreddit> mValues;
     private boolean mTwoPane;
     private final String mAccessToken;
+    private int noSubreddits;
 
     private final View.OnClickListener mOnClickListener = view ->
         onClickExt((Subreddit)view.getTag(), view.getContext());
 
     private void onClickExt(Subreddit item, Context context) {
         if (mTwoPane) {
-            Bundle arguments = new Bundle();
-            arguments.putString(Tags.SUBREDDIT_NAME, item.name);
-            arguments.putString(Tags.ACCESS_TOKEN, mAccessToken);
-            PostsListFragment fragment = new PostsListFragment();
-            fragment.setArguments(arguments);
-            mParentActivity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
-                    .commit();
+
         } else {
             Intent intent = new Intent(context, PostsListActivity.class);
             // Sending info about subreddit
@@ -52,14 +46,20 @@ public class SubredditRecyclerViewAdapter
         }
     }
 
-    public SubredditRecyclerViewAdapter(SubredditsActivity parent,
-                                        List<Subreddit> items,
+    public SubredditRecyclerViewAdapter(SubredditsListActivity parent,
                                         boolean twoPane,
                                         String accessToken) {
-        mValues = items;
         mParentActivity = parent;
+        noSubreddits = 0;
         mTwoPane = twoPane;
         mAccessToken = accessToken;
+    }
+
+    @Override
+    public void setData(List<Subreddit> elements) {
+        mValues = elements;
+        noSubreddits = elements.size();
+        notifyDataSetChanged();
     }
 
     @NotNull
@@ -72,23 +72,23 @@ public class SubredditRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(final SubredditViewHolder holder, int position) {
-        holder.mIdView.setText(mValues.get(position).redditId);
-        holder.mContentView.setText(mValues.get(position).name);
-        String imagePath = mValues.get(position).iconImg;
+        Subreddit sr = mValues.get(position);
+        String imagePath = sr.iconImg;
+        holder.mIdView.setText(sr.redditId);
+        holder.mContentView.setText(sr.name);
 
         if(imagePath != null && !imagePath.isEmpty())
             Picasso.get().load(imagePath).into(holder.mIconView);
         else
-            holder.mIconView.setBackgroundResource(R.drawable.ic_reddit_svgrepo_com);
+            holder.mIconView.setImageResource(R.drawable.ic_reddit_svgrepo_com);
 
-        holder.itemView.setTag(mValues.get(position));
+        holder.itemView.setTag(sr);
         holder.itemView.setOnClickListener(mOnClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return noSubreddits;
     }
-
 }
 

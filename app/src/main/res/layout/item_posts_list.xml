@@ -56,6 +56,8 @@
             <ImageView
                 android:id="@+id/iv_post_image"
                 android:visibility="gone"
+                android:maxHeight="200dp"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/post_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

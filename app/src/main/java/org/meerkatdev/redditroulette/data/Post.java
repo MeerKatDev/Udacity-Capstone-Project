@@ -3,6 +3,8 @@ package org.meerkatdev.redditroulette.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +35,10 @@ public class Post implements Parcelable {
             + "hint: " + this.hint + ", "
             + "link: " + this.link + ", "
             + "mediaUrl: " + this.mediaUrl;
+    }
+
+    public String getHint() {
+        return this.hint==null ? "" :this.hint;
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.meerkatdev.redditroulette.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,28 +14,26 @@ import org.meerkatdev.redditroulette.PostViewActivity;
 import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.adapters.viewholders.CommentViewHolder;
 import org.meerkatdev.redditroulette.data.Comment;
-import org.meerkatdev.redditroulette.data.Post;
-import org.meerkatdev.redditroulette.utils.Tags;
 
 import java.util.List;
 
 public class CommentRecyclerViewAdapter
-        extends RecyclerView.Adapter<CommentViewHolder> {
+        extends RecyclerView.Adapter<CommentViewHolder> implements RVAdapter<Comment> {
 
     private List<Comment> mValues;
     private PostViewActivity mParentActivity;
     int noComments;
 
-    private final View.OnClickListener mOnClickListener = view ->
-            onClickExt((Post) view.getTag(), view.getContext());
+    private final View.OnLongClickListener mOnClickListener = view ->
+            onClickExt((Comment) view.getTag(), view.getContext());
 
-    private void onClickExt(Post item, Context context) {
-    // TODO where to?
-
-    //        Intent intent = new Intent(context, PostViewActivity.class);
-    //        // Sending info about subreddit
-    //        intent.putExtra(Tags.POST, item);
-    //        context.startActivity(intent);
+    private boolean onClickExt(Comment item, Context context) {
+        // TODO where to?
+        String url = "https://www.reddit.com";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        context.startActivity(i);
+        return true;
     }
 
 
@@ -65,7 +64,7 @@ public class CommentRecyclerViewAdapter
         holder.mAuthorView.setText(comment.author);
         holder.mContentView.setText(comment.content);
         holder.itemView.setTag(comment);
-        //holder.itemView.setOnClickListener(mOnClickListener);
+        holder.itemView.setOnLongClickListener(mOnClickListener);
 
     }
 

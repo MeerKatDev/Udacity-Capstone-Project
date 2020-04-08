@@ -34,7 +34,6 @@ public class PostViewActivity extends AppCompatActivity {
 
     private static final String TAG = PostViewActivity.class.getSimpleName();
     private CommentRecyclerViewAdapter viewCommentsAdapter;
-    private String mSubredditName;
     private Post mPost;
 
     @Override
@@ -42,7 +41,7 @@ public class PostViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_view);
         Intent intent = getIntent();
-        View rootView = findViewById(R.id.activity_post_view);
+        View rootView = findViewById(R.id.post_view);
         if(intent.getExtras().containsKey(Tags.POST)) {
             mPost = intent.getParcelableExtra(Tags.POST);
             PostViewHolder viewHolder = new PostViewHolder(rootView);

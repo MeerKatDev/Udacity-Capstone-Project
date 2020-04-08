@@ -39,27 +39,30 @@ public class RedditApi implements RedditConstants {
                 .build();
     }
 
-    static Request getRefreshTokenRequest(Context ctx, String refreshToken) {
+    public static Request getRefreshTokenRequest(Context ctx, String refreshToken) {
 
         RequestBody requestBody = new FormBody.Builder()
                 .add("grant_type", "refresh_token")
                 .add("refresh_token", refreshToken)
                 .build();
 
+        Log.d(TAG, requestBody.toString());
+        Log.d(TAG, "refresh_token: " + refreshToken);
+
         String accessTokenUrl = getAuthorizationUrl();
 
+        Log.d(TAG, "Link: " + accessTokenUrl);
         return new Request.Builder()
                 .addHeader("User-Agent", ctx.getResources().getString(R.string.app_name))
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Authorization", getAuthorizationHeader())
                 .url(accessTokenUrl)
                 .post(requestBody)
                 .build();
     }
 
-    static Request getAuthorizationTokenRequest(Context ctx, String code) {
+    public static Request getAuthorizationTokenRequest(Context ctx, String code) {
 
-        String authString = CLIENT_ID + ":";
-        String encodedAuthString = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
 
         RequestBody requestBody = new FormBody.Builder()
                 .add("grant_type", "authorization_code")
@@ -72,10 +75,15 @@ public class RedditApi implements RedditConstants {
         return new Request.Builder()
                 .addHeader("User-Agent", ctx.getResources().getString(R.string.app_name))
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addHeader("Authorization", "Basic " + encodedAuthString)
+                .addHeader("Authorization", getAuthorizationHeader())
                 .url(accessTokenUrl)
                 .post(requestBody)
                 .build();
+    }
+
+    private static String getAuthorizationHeader() {
+        String authString = CLIENT_ID + ":";
+        return "Basic " + Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
     }
 
     private static String getAuthorizationUrl() {
@@ -128,11 +136,11 @@ public class RedditApi implements RedditConstants {
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
 
-    private static Request generatedAuthorizedRequest(String builtRequestUrl, String authToken) {
+    private static Request generatedAuthorizedRequest(String builtRequestUrl, String accessToken) {
         Log.d(TAG, "Request made to: " + builtRequestUrl);
-        Log.d(TAG, "authToken: " + authToken);
+        Log.d(TAG, "authToken: " + accessToken);
         return new Request.Builder()
-                .addHeader("Authorization", "bearer " + authToken)
+                .addHeader("Authorization", "bearer " + accessToken)
                 .url(builtRequestUrl)
                 .build();
     }

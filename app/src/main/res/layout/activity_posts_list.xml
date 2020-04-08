@@ -7,7 +7,8 @@
 
     <fragment
         android:id="@+id/fragment_posts_list"
-        android:name="org.meerkatdev.redditroulette.PostsListFragment"
+        android:name="org.meerkatdev.redditroulette.fragments.PostsListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>
