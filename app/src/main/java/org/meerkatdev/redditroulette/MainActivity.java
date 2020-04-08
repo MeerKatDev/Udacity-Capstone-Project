@@ -24,6 +24,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 // TODO adapt for tablets
+// TODO move onClick Handling to fragments
 
 // TODO Widget selecting one Subreddit only
 // TODO build cache for offline navigation

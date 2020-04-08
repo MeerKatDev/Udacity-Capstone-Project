@@ -50,13 +50,15 @@ public class PostsListFragment extends Fragment {
 
     private static final String TAG = PostsListFragment.class.getSimpleName();
     private PostRecyclerViewAdapter viewAdapter;
+    private SharedViewModel sharedViewModel;
+    String accessToken;
     private boolean mTwoPane;
     public PostsListFragment() { }
 
     private void onViewCreation(Bundle args) {
         Log.d(TAG, "onViewCreation");
         if (args != null) {
-            String accessToken = args.getString(Tags.ACCESS_TOKEN);
+            accessToken = args.getString(Tags.ACCESS_TOKEN);
             String mSubredditName = args.getString(Tags.SUBREDDIT_NAME);
 
             Activity activity = this.getActivity();
@@ -101,22 +103,30 @@ public class PostsListFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         Log.d(TAG, "Setting up sharedViewModel");
-        if(mTwoPane) {
-            ViewModelProviders.of(getActivity())
-                    .get(SharedViewModel.class)
-                    .getStoredSubreddits()
-                    .observe(getViewLifecycleOwner(), elements -> {
-                        Log.d(TAG, "om nom nom");
-                        Log.d(TAG, String.valueOf(elements.size()));
-                        Bundle b = new Intent(getActivity().getIntent()).getExtras();
-                        b.putString(Tags.SUBREDDIT_NAME, elements.get(0).name);
-                        Tags.logBundle(b);
-                        onViewCreation(b);
-                    });
-        } else {
-            onViewCreation(getActivity().getIntent().getExtras());
+        Intent intent = getActivity().getIntent();
+        if(intent != null) {
+            if (mTwoPane) {
+                sharedViewModel = ViewModelProviders
+                        .of(getActivity())
+                        .get(SharedViewModel.class);
+
+                sharedViewModel.getStoredSubreddits().observe(getViewLifecycleOwner(), elements -> {
+                    Log.d(TAG, "om nom nom");
+                    Bundle b = new Intent(intent).getExtras();
+                    b.putString(Tags.SUBREDDIT_NAME, elements.get(0).name);
+                    Tags.logBundle(b);
+                    onViewCreation(b);
+                });
+                sharedViewModel.getSelectedSubreddit().observe(getViewLifecycleOwner(), element -> {
+                    Bundle b = new Intent(intent).getExtras();
+                    b.putString(Tags.SUBREDDIT_NAME, element.name);
+                    Tags.logBundle(b);
+                    onViewCreation(b);
+                });
+            } else {
+                onViewCreation(intent.getExtras());
+            }
         }
         super.onViewCreated(view, savedInstanceState);
     }

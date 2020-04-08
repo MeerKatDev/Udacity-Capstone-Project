@@ -20,7 +20,7 @@ public class SharedViewModel extends ViewModel {
         selectedSubreddit.setValue(item);
     }
 
-    public LiveData<Subreddit> getSelectedSubreddit(Subreddit item) {
+    public LiveData<Subreddit> getSelectedSubreddit() {
         return selectedSubreddit;
     }
 

@@ -56,12 +56,10 @@ public class PostRecyclerViewAdapter
         return new PostViewHolder(view);
     }
 
-
     public PostRecyclerViewAdapter(Activity parent){
         noPosts = 0;
         mParentActivity = parent;
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {

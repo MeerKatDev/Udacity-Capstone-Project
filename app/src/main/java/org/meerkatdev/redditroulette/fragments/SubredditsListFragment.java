@@ -75,9 +75,6 @@ public class SubredditsListFragment extends Fragment {
             populateView(accessToken, viewAdapter);
         }
 
-//        itemSelector.setOnClickListener(item -> {
-//            model.select(item);
-//        });
         super.onViewCreated(rootView, savedInstanceState);
     }
 
@@ -91,6 +88,7 @@ public class SubredditsListFragment extends Fragment {
         Request request = RedditApi.getApiSimpleRequest("subreddits", "popular", accessToken);
 
         sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
+        viewAdapter.setViewModel(sharedViewModel);
         RedditApi.client.newCall(request).enqueue(new Callback() {
 
             @Override
@@ -105,7 +103,6 @@ public class SubredditsListFragment extends Fragment {
                     parentActivity.goBackWithShame(parentActivity, "This is not json");
                 else {
                     ArrayList<Subreddit> elements = JSONUtils.parseJsonSubreddits(jsonResp);
-
 
                     if (!elements.isEmpty())
                         parentActivity.runOnUiThread(() -> {
