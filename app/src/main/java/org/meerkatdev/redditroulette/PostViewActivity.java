@@ -77,10 +77,10 @@ public class PostViewActivity extends AppCompatActivity {
                 Log.d(TAG, "OnResponse, HTTP code: " + response.code());
                 Log.d(TAG, jsonResp);
 
-                Comment[] arraySubs = JSONUtils.parseJsonComments(jsonResp);
+                ArrayList<Comment> arraySubs = JSONUtils.parseJsonComments(jsonResp);
                 if(arraySubs != null)
                     runOnUiThread(() -> {
-                        viewCommentsAdapter.setData(new ArrayList<>(Arrays.asList(arraySubs)));
+                        viewCommentsAdapter.setData(arraySubs);
                     });
             }
         });

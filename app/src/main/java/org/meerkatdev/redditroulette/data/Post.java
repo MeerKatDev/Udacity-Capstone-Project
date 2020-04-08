@@ -2,31 +2,29 @@ package org.meerkatdev.redditroulette.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.google.gson.annotations.SerializedName;
+
 import org.jetbrains.annotations.NotNull;
 
 public class Post implements Parcelable {
 
+    @SerializedName(value = "id")
     public String redditId;
     public String title;
+    @SerializedName(value = "selftext")
     public String content;
     public String author;
+    @SerializedName(value = "permalink")
     public String link;
+    @SerializedName(value = "url")
     public String mediaUrl;
+    @SerializedName(value = "subreddit")
     public String subredditName;
+    @SerializedName(value = "post_hint")
     public String hint;
+    @SerializedName(value = "over_18")
     public boolean sfw;
-
-    public Post(String id, String title, String author, String content, String link, String mediaUrl, String subredditName, boolean over18, String hint) {
-        this.redditId = id; // ID36
-        this.title = title;
-        this.author = "u/" + author;
-        this.content = content;
-        this.link = link;
-        this.mediaUrl = mediaUrl;
-        this.subredditName = subredditName;
-        this.hint = hint;
-        this.sfw = !over18;
-    }
 
     @NotNull
     @Override

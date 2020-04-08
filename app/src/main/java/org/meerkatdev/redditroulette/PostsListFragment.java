@@ -72,10 +72,10 @@ public class PostsListFragment extends Fragment {
                     Log.d(TAG, "OnResponse, HTTP code: " + response.code());
                     Log.d(TAG, jsonResp);
 
-                    Post[] arraySubs = JSONUtils.parseJsonPosts(jsonResp);
+                    ArrayList<Post> arraySubs = JSONUtils.parseJsonPosts(jsonResp);
                     if(arraySubs != null)
                         getActivity().runOnUiThread(() -> {
-                            viewAdapter.setData(new ArrayList<>(Arrays.asList(arraySubs)));
+                            viewAdapter.setData(arraySubs);
                             //recyclerView.setAdapter(new PostRecyclerViewAdapter((PostsListActivity) getActivity());
                             //setupRecyclerView(new ArrayList<>(Arrays.asList(arraySubs)))
                         });

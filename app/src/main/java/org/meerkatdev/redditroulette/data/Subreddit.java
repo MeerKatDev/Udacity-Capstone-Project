@@ -1,24 +1,22 @@
 package org.meerkatdev.redditroulette.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.jetbrains.annotations.NotNull;
 
 public class Subreddit {
 
-    public final String redditId;
-    public final String name;
-    final String description;
-    public final String iconImg;
-    final String headerImg;
-    final boolean sfw;
-
-    public Subreddit(String redditId, String name, String desc, String icon, String header, boolean over18) {
-        this.redditId = redditId;
-        this.name = name;
-        this.description = desc;
-        this.iconImg = icon;
-        this.headerImg = header;
-        this.sfw = !over18; // NEGATION IMPORTANT
-    }
+    @SerializedName(value = "id")
+    public String redditId;
+    @SerializedName(value = "display_name")
+    public String name;
+    public String description;
+    @SerializedName(value = "icon_img")
+    public String iconImg;
+    @SerializedName(value = "header_img")
+    public String headerImg;
+    @SerializedName(value = "over18")
+    public boolean notSfw;
 
     @NotNull
     @Override

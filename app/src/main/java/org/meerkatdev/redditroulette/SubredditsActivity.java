@@ -67,7 +67,7 @@ public class SubredditsActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         // Something is no yes, go back to MainActivity
-        if (!extras.containsKey(Tags.ACCESS_TYPE)) finish();
+        if (extras!=null && !extras.containsKey(Tags.ACCESS_TYPE)) finish();
 
         String accessToken = extras.getString(Tags.ACCESS_TOKEN);
         Log.d(TAG, "accessToken: " + accessToken);
@@ -100,11 +100,13 @@ public class SubredditsActivity extends AppCompatActivity {
                         goBackWithShame(activityCtx, "Unauthorized");
                     else if(!response.header("content-type").equals("application/json; charset=UTF-8"))
                         goBackWithShame(activityCtx, "This is not json");
-                    Subreddit[] arraySubs = JSONUtils.parseJsonSubreddits(jsonResp);
-                    if(arraySubs != null)
-                        runOnUiThread(() ->
-                            setupRecyclerView(new ArrayList<>(Arrays.asList(arraySubs)))
-                        );
+                    else {
+                        ArrayList<Subreddit> arraySubs = JSONUtils.parseJsonSubreddits(jsonResp);
+                        if (!arraySubs.isEmpty())
+                            runOnUiThread(() ->
+                                    setupRecyclerView(arraySubs)
+                            );
+                    }
                 }
 
                 @Override
