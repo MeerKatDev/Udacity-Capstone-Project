@@ -12,6 +12,11 @@
         android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<!--ca-app-pub-6478297406439980/3047120267-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6478297406439980~4551773625"/>
+
         <activity android:name=".PostViewActivity" />
         <activity
             android:name=".PreferencesActivity"

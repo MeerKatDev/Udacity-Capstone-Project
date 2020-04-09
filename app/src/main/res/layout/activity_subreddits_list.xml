@@ -19,7 +19,17 @@
             android:layout_height="?attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/subr_activity_ad"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-6478297406439980/3047120267" />
+
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <fragment
         android:id="@+id/fragment_subreddits_list"

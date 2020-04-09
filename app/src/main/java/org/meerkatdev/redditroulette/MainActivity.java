@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.ads.MobileAds;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.meerkatdev.redditroulette.databinding.ActivityMainBinding;
