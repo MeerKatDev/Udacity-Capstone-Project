@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/item_posts_list" />
+        <include android:id="@+id/item_post_view" layout="@layout/item_posts_list" />
 
         <include layout="@layout/fragment_comments_list" />
 

@@ -8,7 +8,7 @@ import org.meerkatdev.redditroulette.data.Subreddit;
 
 import java.util.ArrayList;
 
-public class SharedViewModel extends ViewModel {
+public class SubredditsSharedViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Subreddit>> storedSubreddits = new MutableLiveData<>();
     private final MutableLiveData<Subreddit> selectedSubreddit = new MutableLiveData<>();
 

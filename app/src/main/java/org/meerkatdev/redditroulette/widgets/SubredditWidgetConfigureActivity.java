@@ -78,8 +78,10 @@ public class SubredditWidgetConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.subreddit_widget_configure);
-        mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
+        //mAppWidgetText = findViewById(R.id.appwidget_text);
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
+
+        // TODO set GridView here
 
         // Find the widget id from the intent.
         Intent intent = getIntent();

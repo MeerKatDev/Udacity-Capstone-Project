@@ -5,8 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.meerkatdev.redditroulette.R;
+import org.meerkatdev.redditroulette.databinding.ItemPostsListBinding;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
     public final TextView mTitleView;
@@ -14,13 +13,15 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     public final TextView mLinkView;
     public final TextView mAuthorView;
     public final ImageView mPostImageView;
+    private ItemPostsListBinding binding;
 
     public PostViewHolder(View view) {
         super(view);
-        mTitleView = view.findViewById(R.id.tv_post_title);
-        mContentView = view.findViewById(R.id.tv_post_content);
-        mLinkView = view.findViewById(R.id.tv_post_link);
-        mAuthorView = view.findViewById(R.id.tv_post_author);
-        mPostImageView = view.findViewById(R.id.iv_post_image);
+        binding = ItemPostsListBinding.bind(view);
+        mTitleView = binding.tvPostTitle;
+        mContentView = binding.tvPostContent;
+        mLinkView = binding.tvPostLink;
+        mAuthorView = binding.tvPostAuthor;
+        mPostImageView = binding.ivPostImage;
     }
 }

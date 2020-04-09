@@ -2,7 +2,6 @@ package org.meerkatdev.redditroulette.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,10 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 import org.meerkatdev.redditroulette.PostsListActivity;
 import org.meerkatdev.redditroulette.SubredditsListActivity;
-import org.meerkatdev.redditroulette.fragments.PostsListFragment;
 import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.adapters.viewholders.SubredditViewHolder;
 import org.meerkatdev.redditroulette.data.Subreddit;
-import org.meerkatdev.redditroulette.ui.SharedViewModel;
+import org.meerkatdev.redditroulette.ui.SubredditsSharedViewModel;
 import org.meerkatdev.redditroulette.utils.Tags;
 
 import java.util.List;
@@ -32,14 +30,14 @@ public class SubredditRecyclerViewAdapter
     private final String mAccessToken;
     private int noSubreddits;
 
-    private SharedViewModel sharedViewModel;
+    private SubredditsSharedViewModel subredditsSharedViewModel;
 
     private final View.OnClickListener mOnClickListener = view ->
         onClickExt((Subreddit)view.getTag(), view.getContext());
 
     private void onClickExt(Subreddit item, Context context) {
         if (mTwoPane) {
-            sharedViewModel.selectSubreddit(item);
+            subredditsSharedViewModel.selectSubreddit(item);
         } else {
             Intent intent = new Intent(context, PostsListActivity.class);
             // Sending info about subreddit
@@ -65,8 +63,8 @@ public class SubredditRecyclerViewAdapter
         notifyDataSetChanged();
     }
 
-    public void setViewModel(SharedViewModel viewModel) {
-        sharedViewModel = viewModel;
+    public void setViewModel(SubredditsSharedViewModel viewModel) {
+        subredditsSharedViewModel = viewModel;
     }
 
     @NotNull

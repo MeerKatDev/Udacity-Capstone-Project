@@ -1,14 +1,10 @@
 package org.meerkatdev.redditroulette.fragments;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,16 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import org.jetbrains.annotations.NotNull;
-import org.meerkatdev.redditroulette.MainActivity;
 import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.SubredditsListActivity;
 import org.meerkatdev.redditroulette.adapters.SubredditRecyclerViewAdapter;
 import org.meerkatdev.redditroulette.data.Subreddit;
+import org.meerkatdev.redditroulette.databinding.FragmentSubredditsListBinding;
 import org.meerkatdev.redditroulette.net.RedditApi;
-import org.meerkatdev.redditroulette.ui.SharedViewModel;
+import org.meerkatdev.redditroulette.ui.SubredditsSharedViewModel;
 import org.meerkatdev.redditroulette.utils.JSONUtils;
 import org.meerkatdev.redditroulette.utils.Tags;
 
@@ -43,16 +38,18 @@ public class SubredditsListFragment extends Fragment {
     private static final String TAG = SubredditsListFragment.class.getSimpleName();
     private SubredditsListActivity parentActivity;
     private boolean mTwoPane;
+    private FragmentSubredditsListBinding binding;
 
     public SubredditsListFragment() { }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_subreddits_list, container, false);
+        binding = FragmentSubredditsListBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
-    private SharedViewModel sharedViewModel;
+    private SubredditsSharedViewModel subredditsSharedViewModel;
     private SubredditRecyclerViewAdapter viewAdapter;
     private String accessToken;
 
@@ -88,8 +85,8 @@ public class SubredditsListFragment extends Fragment {
         Request request = RedditApi.getApiSimpleRequest("subreddits", "popular", accessToken);
 
         if(mTwoPane) {
-            sharedViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-            viewAdapter.setViewModel(sharedViewModel);
+            subredditsSharedViewModel = ViewModelProviders.of(getActivity()).get(SubredditsSharedViewModel.class);
+            viewAdapter.setViewModel(subredditsSharedViewModel);
         }
         RedditApi.client.newCall(request).enqueue(new Callback() {
 
@@ -110,7 +107,7 @@ public class SubredditsListFragment extends Fragment {
                         parentActivity.runOnUiThread(() -> {
                             if(mTwoPane) {
                                 Log.d(TAG, "Updating!");
-                                sharedViewModel.saveSubreddits(elements);
+                                subredditsSharedViewModel.saveSubreddits(elements);
                             }
                             viewAdapter.setData(elements);
                         });

@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,9 +23,9 @@ import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.SubredditsListActivity;
 import org.meerkatdev.redditroulette.adapters.PostRecyclerViewAdapter;
 import org.meerkatdev.redditroulette.data.Post;
-import org.meerkatdev.redditroulette.data.Subreddit;
+import org.meerkatdev.redditroulette.databinding.FragmentPostsListBinding;
 import org.meerkatdev.redditroulette.net.RedditApi;
-import org.meerkatdev.redditroulette.ui.SharedViewModel;
+import org.meerkatdev.redditroulette.ui.SubredditsSharedViewModel;
 import org.meerkatdev.redditroulette.utils.JSONUtils;
 import org.meerkatdev.redditroulette.utils.Tags;
 
@@ -50,21 +48,74 @@ public class PostsListFragment extends Fragment {
 
     private static final String TAG = PostsListFragment.class.getSimpleName();
     private PostRecyclerViewAdapter viewAdapter;
-    private SharedViewModel sharedViewModel;
+    private SubredditsSharedViewModel subredditsSharedViewModel;
+    private FragmentPostsListBinding binding;
     String accessToken;
     private boolean mTwoPane;
     public PostsListFragment() { }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+        binding = FragmentPostsListBinding.inflate(inflater, container, false);
+        View rootView = binding.getRoot();
+        setupRecyclerView(rootView);
+        mTwoPane = getResources().getBoolean(R.bool.is_tablet);
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "Setting up subredditsSharedViewModel");
+        Intent intent = getActivity().getIntent();
+        if(intent != null) {
+            if (mTwoPane) {
+                subredditsSharedViewModel = ViewModelProviders
+                        .of(getActivity())
+                        .get(SubredditsSharedViewModel.class);
+                // When the subreddits get downloaded and saved in the adapter
+                subredditsSharedViewModel.getStoredSubreddits().observe(getViewLifecycleOwner(), elements -> {
+                    Log.d(TAG, "om nom nom");
+                    Bundle b = new Intent(intent).getExtras();
+                    b.putString(Tags.SUBREDDIT_NAME, elements.get(0).name);
+                    Tags.logBundle(b);
+                    onViewCreation(b);
+                });
+                // When the Subreddit selection in the other fragment changes
+                subredditsSharedViewModel.getSelectedSubreddit().observe(getViewLifecycleOwner(), element -> {
+                    Bundle b = new Intent(intent).getExtras();
+                    b.putString(Tags.SUBREDDIT_NAME, element.name);
+                    Tags.logBundle(b);
+                    onViewCreation(b);
+                });
+            } else {
+                onViewCreation(intent.getExtras());
+            }
+        }
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void setupRecyclerView(View rootView) {
+        final RecyclerView recyclerView = (RecyclerView)rootView;
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mTwoPane ? 2 : 1));
+        viewAdapter = new PostRecyclerViewAdapter(getActivity());
+        recyclerView.setAdapter(viewAdapter);
+    }
+
 
     private void onViewCreation(Bundle args) {
         Log.d(TAG, "onViewCreation");
         if (args != null) {
             accessToken = args.getString(Tags.ACCESS_TOKEN);
             String mSubredditName = args.getString(Tags.SUBREDDIT_NAME);
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle("/r/" + mSubredditName);
+            if(!mTwoPane) {
+                Activity activity = this.getActivity();
+                CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle("/r/" + mSubredditName);
+                }
             }
 
             Request request = RedditApi.getSubredditArticles(mSubredditName, accessToken);
@@ -88,54 +139,5 @@ public class PostsListFragment extends Fragment {
                 }
             });
         }
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
-        View rootView = inflater.inflate(R.layout.fragment_posts_list, container, false);
-        setupRecyclerView(rootView);
-        mTwoPane = getResources().getBoolean(R.bool.is_tablet);
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "Setting up sharedViewModel");
-        Intent intent = getActivity().getIntent();
-        if(intent != null) {
-            if (mTwoPane) {
-                sharedViewModel = ViewModelProviders
-                        .of(getActivity())
-                        .get(SharedViewModel.class);
-
-                sharedViewModel.getStoredSubreddits().observe(getViewLifecycleOwner(), elements -> {
-                    Log.d(TAG, "om nom nom");
-                    Bundle b = new Intent(intent).getExtras();
-                    b.putString(Tags.SUBREDDIT_NAME, elements.get(0).name);
-                    Tags.logBundle(b);
-                    onViewCreation(b);
-                });
-                sharedViewModel.getSelectedSubreddit().observe(getViewLifecycleOwner(), element -> {
-                    Bundle b = new Intent(intent).getExtras();
-                    b.putString(Tags.SUBREDDIT_NAME, element.name);
-                    Tags.logBundle(b);
-                    onViewCreation(b);
-                });
-            } else {
-                onViewCreation(intent.getExtras());
-            }
-        }
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    private void setupRecyclerView(View rootView) {
-        final RecyclerView recyclerView = (RecyclerView)rootView;
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mTwoPane ? 2 : 1));
-        viewAdapter = new PostRecyclerViewAdapter(getActivity());
-        recyclerView.setAdapter(viewAdapter);
     }
 }

@@ -16,6 +16,8 @@ import org.meerkatdev.redditroulette.adapters.PostRecyclerViewAdapter;
 import org.meerkatdev.redditroulette.adapters.viewholders.PostViewHolder;
 import org.meerkatdev.redditroulette.data.Comment;
 import org.meerkatdev.redditroulette.data.Post;
+import org.meerkatdev.redditroulette.databinding.ActivityPostViewBinding;
+import org.meerkatdev.redditroulette.databinding.ItemPostsListBinding;
 import org.meerkatdev.redditroulette.net.RedditApi;
 import org.meerkatdev.redditroulette.utils.JSONUtils;
 import org.meerkatdev.redditroulette.utils.Tags;
@@ -34,19 +36,18 @@ public class PostViewActivity extends AppCompatActivity {
 
     private static final String TAG = PostViewActivity.class.getSimpleName();
     private CommentRecyclerViewAdapter viewCommentsAdapter;
+    private ActivityPostViewBinding binding;
     private Post mPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_view);
+        binding = ActivityPostViewBinding.inflate(getLayoutInflater());
+        View rootView = binding.getRoot();
+        setContentView(rootView);
         Intent intent = getIntent();
-        View rootView = findViewById(R.id.post_view);
         if(intent.getExtras().containsKey(Tags.POST)) {
             mPost = intent.getParcelableExtra(Tags.POST);
-            PostViewHolder viewHolder = new PostViewHolder(rootView);
-            PostRecyclerViewAdapter.bindViews(viewHolder, mPost);
-
         }
         setupRecyclerView(rootView);
         downloadComments();

@@ -8,9 +8,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import org.meerkatdev.redditroulette.databinding.ActivityMainBinding;
 import org.meerkatdev.redditroulette.net.OAuthHandler;
 import org.meerkatdev.redditroulette.net.RedditApi;
 import org.meerkatdev.redditroulette.utils.Tags;
@@ -23,18 +25,22 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-// TODO adapt for tablets
-// TODO move onClick Handling to fragments
+// TODO adapt for tablets (almost)
 
 // TODO Widget selecting one Subreddit only
 // TODO build cache for offline navigation
+
 // TODO Favorites
-
-// TODO Settings
-// TODO add some tests
-
 // TODO Dark/Light themes
+
+// TODO implement jobschedulers itd
+// TODO TESTING
 // TODO RTL layout
+// TODO Ads
+// TODO Firebase handling
+
+// refactoring
+// TODO move onClick Handling to fragments
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,12 +49,15 @@ public class MainActivity extends AppCompatActivity {
     private final String randomString = "random_string";
     private Context mContext;
     private SharedPreferences oauthPreference;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(Tags.LIFECYCLE, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View rootView = binding.getRoot();
+        setContentView(rootView);
         oauthPreference =  getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
         mContext = this;
         // not first access
@@ -71,13 +80,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         // first time, nonregistered, just go
-        findViewById(R.id.asguest).setOnClickListener(v -> {
+        binding.asguest.setOnClickListener(v -> {
             Intent internalIntent = new Intent(this, SubredditsListActivity.class);
             intent.putExtra(Tags.ACCESS_TYPE, "guest");
             startActivity(internalIntent);
         });
         // first time, registered, but they have to login
-        findViewById(R.id.signin).setOnClickListener(v -> {
+        binding.signin.setOnClickListener(v -> {
             Uri authUrl = RedditApi.buildAuthorizationURL(randomString);
             Intent internalIntent = new Intent(Intent.ACTION_VIEW, authUrl);
             startActivity(internalIntent);
