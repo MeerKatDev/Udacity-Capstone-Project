@@ -21,7 +21,7 @@
             android:layout_margin="@dimen/text_margin"
             android:textColor="@color/colorPrimaryDark"
             tools:text="Comment author"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textAppearance="?attr/textAppearanceListItem" />
         <TextView
@@ -31,7 +31,7 @@
             android:layout_margin="@dimen/text_margin"
             android:textColor="@color/colorPrimaryDark"
             tools:text="Comment content"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_comment_author"
             android:textAppearance="?attr/textAppearanceListItem" />
 

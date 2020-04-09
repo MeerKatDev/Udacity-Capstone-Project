@@ -35,9 +35,7 @@ import okhttp3.Response;
 
 // TODO implement jobschedulers itd
 // TODO TESTING
-// TODO RTL layout
 // TODO Ads
-// TODO Firebase handling
 
 // refactoring
 // TODO move onClick Handling to fragments
@@ -61,17 +59,14 @@ public class MainActivity extends AppCompatActivity {
         oauthPreference =  getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
         mContext = this;
         // not first access
-        if(oauthPreference.contains(Tags.ACCESS_TOKEN) && !oauthPreference.getString(Tags.ACCESS_TOKEN, "").isEmpty()) {
+        if(preferenceHasNonEmptyToken()) {
             Log.d(Tags.LIFECYCLE, "it contains the access token, and");
             if(isTokenExpired()) {
-                Log.d(TAG, "Remained: " + (oauthPreference.getLong("expires_at",0L) - System.currentTimeMillis()/1000));
-                Log.d(Tags.LIFECYCLE, "it is expired");
+                Log.d(Tags.LIFECYCLE, "it is expired, refreshing access token!");
                 String refreshToken = oauthPreference.getString(Tags.REFRESH_TOKEN, "");
-                Log.d(TAG, "refreshing access token!");
                 handleAccessTokenCall(RedditApi.getRefreshTokenRequest(mContext, refreshToken));
             } else {
-                Log.d(TAG, "Remained: " + (oauthPreference.getLong("expires_at",0L) - System.currentTimeMillis()/1000));
-                Log.d(Tags.LIFECYCLE, "it is not expired!");
+                Log.d(TAG, "Remained: " + getSecondsToExpiration() + "seconds, so it is not expired!");
                 goAsRegisteredUser(oauthPreference.getString(Tags.ACCESS_TOKEN, ""));
             }
         } else {
@@ -79,11 +74,15 @@ public class MainActivity extends AppCompatActivity {
         }
         Intent intent = getIntent();
 
-        // first time, nonregistered, just go
         binding.asguest.setOnClickListener(v -> {
-            Intent internalIntent = new Intent(this, SubredditsListActivity.class);
-            intent.putExtra(Tags.ACCESS_TYPE, "guest");
-            startActivity(internalIntent);
+            if(preferenceHasNonEmptyToken() && !isTokenExpired()) {
+                goAsRegisteredUser(oauthPreference.getString(Tags.ACCESS_TOKEN, ""));
+            } else {
+                // first time, nonregistered, get new token
+                Intent internalIntent = new Intent(this, SubredditsListActivity.class);
+                intent.putExtra(Tags.ACCESS_TYPE, "guest");
+                startActivity(internalIntent);
+            }
         });
         // first time, registered, but they have to login
         binding.signin.setOnClickListener(v -> {
@@ -93,8 +92,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private boolean preferenceHasNonEmptyToken() {
+        return oauthPreference.contains(Tags.ACCESS_TOKEN)
+                && !oauthPreference.getString(Tags.ACCESS_TOKEN, "").isEmpty();
+    }
+
+    private long getSecondsToExpiration() {
+        return (oauthPreference.getLong("expires_at",0L) - System.currentTimeMillis()/1000);
+    }
+
     private boolean isTokenExpired() {
-        return oauthPreference.getLong("expires_at", 0L) < (System.currentTimeMillis()/1000);
+        return oauthPreference.getLong("expires_at", 0L) <= (System.currentTimeMillis()/1000);
     }
 
     private void goAsRegisteredUser(String accessToken) {

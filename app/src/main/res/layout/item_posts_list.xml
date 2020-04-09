@@ -24,7 +24,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textAlignment="textEnd"
             tools:text="POST AUTHOR"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textAppearance="?attr/textAppearanceListItem" />
 
@@ -36,14 +36,14 @@
             android:layout_margin="@dimen/text_margin"
             android:textColor="@color/colorPrimaryDark"
             tools:text="POST TITLE"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_post_author"
             android:textAppearance="?attr/textAppearanceListItem" />
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxHeight="150dp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_post_title"
             app:layout_constraintBottom_toTopOf="@id/tv_post_link">
             <TextView
@@ -72,7 +72,7 @@
             android:src="@drawable/ic_open_in_browser_24px"
             android:layout_margin="@dimen/text_margin"
             android:clickable="true"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:focusable="true" />
 
@@ -84,7 +84,7 @@
             android:trackTint="@android:color/holo_blue_dark"
             android:layout_margin="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

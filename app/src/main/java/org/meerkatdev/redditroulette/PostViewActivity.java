@@ -12,19 +12,15 @@ import android.view.View;
 
 import org.jetbrains.annotations.NotNull;
 import org.meerkatdev.redditroulette.adapters.CommentRecyclerViewAdapter;
-import org.meerkatdev.redditroulette.adapters.PostRecyclerViewAdapter;
-import org.meerkatdev.redditroulette.adapters.viewholders.PostViewHolder;
 import org.meerkatdev.redditroulette.data.Comment;
 import org.meerkatdev.redditroulette.data.Post;
 import org.meerkatdev.redditroulette.databinding.ActivityPostViewBinding;
-import org.meerkatdev.redditroulette.databinding.ItemPostsListBinding;
 import org.meerkatdev.redditroulette.net.RedditApi;
 import org.meerkatdev.redditroulette.utils.JSONUtils;
 import org.meerkatdev.redditroulette.utils.Tags;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 import okhttp3.Call;

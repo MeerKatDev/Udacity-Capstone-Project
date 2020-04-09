@@ -1,7 +1,6 @@
 package org.meerkatdev.redditroulette;
 
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 

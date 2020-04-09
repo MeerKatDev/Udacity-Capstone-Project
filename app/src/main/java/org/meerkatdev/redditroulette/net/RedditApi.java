@@ -103,7 +103,6 @@ public class RedditApi implements RedditConstants {
     public static Request getArticleComments(String subreddit, String articleId, String authToken) {
         Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
         String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/comments/"+articleId+"/")
-                //.appendQueryParameter("limit", "10")
                 .build().toString();
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }

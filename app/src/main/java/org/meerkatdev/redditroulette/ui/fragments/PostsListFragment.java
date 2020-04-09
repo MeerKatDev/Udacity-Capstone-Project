@@ -1,6 +1,5 @@
 package org.meerkatdev.redditroulette.ui.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -103,7 +102,7 @@ public class PostsListFragment extends Fragment {
         final RecyclerView recyclerView = (RecyclerView)rootView;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), mTwoPane ? 2 : 1));
-        viewAdapter = new PostRecyclerViewAdapter(getActivity());
+        viewAdapter = new PostRecyclerViewAdapter(getActivity(), mTwoPane);
         recyclerView.setAdapter(viewAdapter);
     }
 

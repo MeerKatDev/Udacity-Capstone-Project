@@ -16,6 +16,9 @@ public interface PostDAO {
     @Query("SELECT * FROM posts")
     LiveData<List<Post>> loadAll();
 
+    @Query("SELECT * FROM posts WHERE subredditName = :subredditName")
+    LiveData<List<Post>> getAllBySubredditName(String subredditName);
+
     @Insert
     void insert(Post element);
 

@@ -19,8 +19,8 @@
             android:id="@+id/iv_subreddit_icon"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             tools:text="SUBREDDIT TEXT"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_subreddit_icon"
             android:textAppearance="?attr/textAppearanceListItem" />
 
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             tools:text="SUBREDDIT CONTENT"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_subreddit_icon"
             android:textAppearance="?attr/textAppearanceListItem" />
 

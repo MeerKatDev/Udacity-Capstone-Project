@@ -16,6 +16,9 @@ public interface SubredditDAO {
     @Query("SELECT * FROM subreddits")
     LiveData<List<Subreddit>> loadAll();
 
+    @Query("SELECT * FROM subreddits WHERE name = :name")
+    LiveData<Subreddit> getByName(String name);
+
     @Insert
     void insert(Subreddit element);
 

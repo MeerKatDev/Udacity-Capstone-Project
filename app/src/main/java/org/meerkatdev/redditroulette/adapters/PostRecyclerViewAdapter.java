@@ -61,9 +61,10 @@ public class PostRecyclerViewAdapter
         return new PostViewHolder(view);
     }
 
-    public PostRecyclerViewAdapter(Activity parent){
+    public PostRecyclerViewAdapter(Activity parent, boolean twoPane){
         noPosts = 0;
         mParentActivity = parent;
+        mTwoPane = twoPane;
     }
 
     @Override
