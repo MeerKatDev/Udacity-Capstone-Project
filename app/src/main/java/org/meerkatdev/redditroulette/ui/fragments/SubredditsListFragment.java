@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -85,7 +86,9 @@ public class SubredditsListFragment extends Fragment {
         mFirebaseAnalytics.logEvent("opened_subreddits_fragment", extras);
         if(savedInstanceState!=null && savedInstanceState.containsKey(Tags.LIST_STATE_KEY)) {
             mListState = savedInstanceState.getParcelable(Tags.LIST_STATE_KEY);
-            //layoutManager.onRestoreInstanceState(mListState); // apparently nulled
+            Log.d(TAG, "mListState: " + mListState);
+            Log.d(TAG, "mListState: " + layoutManager);
+            layoutManager.onRestoreInstanceState(mListState); // apparently nulled
         } else if (extras == null || (!extras.containsKey(Tags.ACCESS_TYPE))) {
             parentActivity.finish(); // Something is no yes, go back to MainActivity
         } else {
@@ -105,7 +108,7 @@ public class SubredditsListFragment extends Fragment {
     }
 
     private void populateView(SubredditRecyclerViewAdapter viewAdapter, Request request) {
-        boolean includeSfw =
+        boolean includeNotSfw =
                 PreferenceManager.getDefaultSharedPreferences(parentActivity)
                         .getBoolean("sfw", false);
 
@@ -127,15 +130,23 @@ public class SubredditsListFragment extends Fragment {
                     parentActivity.goBackWithShame(parentActivity, "This is not json");
                 else {
                     ArrayList<Subreddit> elements = JSONUtils.parseJsonSubreddits(jsonResp);
-                    if (!elements.isEmpty())
+                    if (!elements.isEmpty()) {
+                        ArrayList<Subreddit> validElements = includeNotSfw ? elements
+                                : (ArrayList<Subreddit>) elements.stream().filter(a -> !a.notSfw).collect(Collectors.toList());
+
+                        mListState = layoutManager.onSaveInstanceState();
                         parentActivity.runOnUiThread(() -> {
-                            if(mTwoPane) {
-                                Log.d(TAG, "Updating!");
-                                subredditsSharedViewModel.saveSubreddits(includeSfw ? elements
-                                        : (ArrayList<Subreddit>) elements.stream().filter(a -> !a.notSfw).collect(Collectors.toList()));
-                            }
-                            viewAdapter.setData(elements);
+                            if (mTwoPane)
+                                subredditsSharedViewModel.saveSubreddits(validElements);
+
+                            AppExecutors.getInstance().diskIO().execute(() -> {
+                                Log.d(TAG, "CACHING SUBREDDITS");
+                                AppDatabase.getInstance(parentActivity).subredditDAO().insertAll(validElements.toArray(new Subreddit[]{}));
+                            });
+                            viewAdapter.setData(validElements);
+
                         });
+                    }
                 }
             }
 
@@ -152,7 +163,7 @@ public class SubredditsListFragment extends Fragment {
         Log.d(TAG, "resuming state");
         super.onResume();
         if (mListState != null) {
-//            layoutManager.onRestoreInstanceState(mListState);
+            layoutManager.onRestoreInstanceState(mListState);
         }
     }
 
@@ -180,7 +191,8 @@ public class SubredditsListFragment extends Fragment {
             case R.id.sr_sortby_saved:
                 AppExecutors.getInstance().diskIO().execute(() -> {
                     Log.d(TAG, "Getting saved subreddits ");
-                    List<Subreddit> elements = AppDatabase.getInstance(parentActivity).subredditDAO().loadAll().getValue();
+                    List<Subreddit> elements = AppDatabase.getInstance(parentActivity).savedSubredditDAO().loadAll().getValue();
+
                     viewAdapter.setData(elements);
                 });
                 break;

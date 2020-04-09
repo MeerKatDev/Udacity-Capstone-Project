@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -18,11 +22,17 @@ import org.meerkatdev.redditroulette.PostViewActivity;
 import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.adapters.viewholders.PostViewHolder;
 import org.meerkatdev.redditroulette.data.Post;
+import org.meerkatdev.redditroulette.data.SavedSubreddit;
+import org.meerkatdev.redditroulette.data.Subreddit;
 import org.meerkatdev.redditroulette.data.db.AppDatabase;
 import org.meerkatdev.redditroulette.net.RedditApi;
+import org.meerkatdev.redditroulette.ui.OfflinePostsViewModel;
+import org.meerkatdev.redditroulette.ui.SubredditsSharedViewModel;
 import org.meerkatdev.redditroulette.utils.AppExecutors;
 import org.meerkatdev.redditroulette.utils.Tags;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class PostRecyclerViewAdapter
@@ -31,15 +41,17 @@ public class PostRecyclerViewAdapter
     private static final String TAG = PostRecyclerViewAdapter.class.getSimpleName();
 
     private List<Post> mValues;
-    private static Activity mParentActivity;
+    private static FragmentActivity mParentActivity;
     private boolean mTwoPane;
+    private AppDatabase mDb;
+    private OfflinePostsViewModel viewModel;
+    private String[] savedPostIds;
     int noPosts;
 
     private final View.OnClickListener mOnClickListener = view ->
             onClickExt((Post) view.getTag(), view.getContext());
 
     private void onClickExt(Post item, Context context) {
-
         if(!mTwoPane){
             Intent intent = new Intent(context, PostViewActivity.class);
             intent.putExtra(Tags.POST, item);
@@ -61,32 +73,53 @@ public class PostRecyclerViewAdapter
         return new PostViewHolder(view);
     }
 
-    public PostRecyclerViewAdapter(Activity parent, boolean twoPane){
+    public PostRecyclerViewAdapter(FragmentActivity parent, boolean twoPane){
+        mDb = AppDatabase.getInstance(mParentActivity);
         noPosts = 0;
         mParentActivity = parent;
         mTwoPane = twoPane;
+        viewModel = ViewModelProviders.of(mParentActivity).get(OfflinePostsViewModel.class);
+        viewModel.getSavedPosts().observe(mParentActivity, v -> {
+            Log.d(TAG, "updating savedposts");
+            AppExecutors.getInstance().diskIO().execute(() ->
+                    savedPostIds = mDb.postDao().loadAllSync().stream().map(a -> a.redditId).toArray(String[]::new)
+            );
+        });
     }
 
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post thisPost = mValues.get(position);
-        Log.d("TAG", "SETTING ITEM: " + thisPost + ", " + holder.itemView);
-        //holder.itemView.setTag(thisPost);
         bindSingleView(holder, thisPost);
+
         holder.mContentView.setTag(thisPost);
-        holder.mContentView.setOnClickListener(mOnClickListener);
         holder.mTitleView.setTag(thisPost);
+
+        holder.mContentView.setOnClickListener(mOnClickListener);
         holder.mTitleView.setOnClickListener(mOnClickListener);
-        holder.mSwitch.setOnCheckedChangeListener((switchView, isChecked) -> {
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                if(isChecked) {
-                    Log.d(TAG, "Inserting " + thisPost.title);
-                    AppDatabase.getInstance(mParentActivity).postDao().insert(thisPost);
-                } else {
-                    Log.d(TAG, "Deleting " + thisPost.title);
-                    AppDatabase.getInstance(mParentActivity).postDao().delete(thisPost);
-                }
-            });
+        Log.d("SavedPosts", "savedPost: " + savedPostIds[0]);
+        Arrays.sort(savedPostIds);
+        Log.d("SavedPosts", "savedPosts size: " + savedPostIds.length + ", contained? " + Arrays.binarySearch(savedPostIds, thisPost.redditId));
+        holder.mSwitch.setChecked(Arrays.binarySearch(savedPostIds, thisPost.redditId) > (-1));
+        //holder.mSwitch.setChecked(true);
+        holder.mSwitch.setOnCheckedChangeListener( (switchView, isChecked) ->
+            handleSavePost(isChecked, thisPost)
+        );
+    }
+
+    private void handleSavePost(boolean isChecked, Post post) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            if(isChecked) {
+                Log.d(TAG, "Inserting " + post.title);
+                viewModel.savePost(post);
+                Subreddit sr = mDb.subredditDAO().getByName(post.subredditName);
+                mDb.savedSubredditDAO().insert(sr);
+            } else {
+                Log.d(TAG, "Deleting " + post.title);
+                mDb.postDao().delete(post);
+                Subreddit sr = mDb.savedSubredditDAO().getByName(post.subredditName);
+                mDb.savedSubredditDAO().delete(sr);
+            }
         });
     }
 

@@ -16,12 +16,11 @@ import org.meerkatdev.redditroulette.databinding.ActivityPostsListBinding;
  */
 public class PostsListActivity extends AppCompatActivity {
 
-    private ActivityPostsListBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPostsListBinding.inflate(getLayoutInflater());
+        ActivityPostsListBinding binding
+                = ActivityPostsListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.detailToolbar);
         ActionBar actionBar = getSupportActionBar();

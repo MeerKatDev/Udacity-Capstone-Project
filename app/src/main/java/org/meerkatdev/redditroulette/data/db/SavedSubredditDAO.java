@@ -7,21 +7,23 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import org.meerkatdev.redditroulette.data.SavedSubreddit;
 import org.meerkatdev.redditroulette.data.Subreddit;
 
 import java.util.List;
 
 @Dao
-public interface SubredditDAO {
+public interface SavedSubredditDAO {
 
-    @Query("SELECT * FROM subreddits")
+    @Query("SELECT * FROM saved_subreddits")
     LiveData<List<Subreddit>> loadAll();
-    @Query("SELECT * FROM subreddits")
-    List<Subreddit> loadAllSync();
 
-    @Query("SELECT * FROM subreddits WHERE name = :name")
+    @Query("SELECT * FROM saved_subreddits WHERE name = :name")
     Subreddit getByName(String name);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertAll(Subreddit... elements);
+    void insert(Subreddit element);
+
+    @Delete
+    void delete(Subreddit element);
 }
