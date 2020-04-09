@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.preference.PreferenceManager;
+
 import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.utils.Tags;
 
@@ -13,6 +15,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
+/** Tried to generalize as much as possible while building this,
+ *  but the API is somehow buggy and disorded, so it is necessary to log a lot
+ */
 public class RedditApi implements RedditConstants {
 
     private static final String TAG = RedditApi.class.getSimpleName();
@@ -51,19 +56,11 @@ public class RedditApi implements RedditConstants {
         Log.d(TAG, "refresh_token: " + refreshToken);
 
         String accessTokenUrl = getAuthorizationUrl();
-
         Log.d(TAG, "Link: " + accessTokenUrl);
-        return new Request.Builder()
-                .addHeader("User-Agent", ctx.getResources().getString(R.string.app_name))
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addHeader("Authorization", getAuthorizationHeader())
-                .url(accessTokenUrl)
-                .post(requestBody)
-                .build();
+        return buildAuthorizationRequest(ctx, accessTokenUrl, requestBody);
     }
 
     public static Request getAuthorizationTokenRequest(Context ctx, String code) {
-
 
         RequestBody requestBody = new FormBody.Builder()
                 .add("grant_type", "authorization_code")
@@ -72,25 +69,7 @@ public class RedditApi implements RedditConstants {
                 .build();
 
         String accessTokenUrl = getAuthorizationUrl();
-
-        return new Request.Builder()
-                .addHeader("User-Agent", ctx.getResources().getString(R.string.app_name))
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addHeader("Authorization", getAuthorizationHeader())
-                .url(accessTokenUrl)
-                .post(requestBody)
-                .build();
-    }
-
-    private static String getAuthorizationHeader() {
-        String authString = CLIENT_ID + ":";
-        return "Basic " + Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
-    }
-
-    private static String getAuthorizationUrl() {
-        return Uri.parse(REDDIT_API_BASEPATH).buildUpon()
-                .appendPath(Tags.ACCESS_TOKEN)
-                .build().toString();
+        return buildAuthorizationRequest(ctx, accessTokenUrl, requestBody);
     }
 
     public static Request getRandomSubredditArticle(String subreddit, String authToken) {
@@ -107,11 +86,12 @@ public class RedditApi implements RedditConstants {
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
 
-
-    public static Request getSubredditArticles(String subreddit, String authToken) {
+    public static Request getSubredditArticles(Context ctx, String subreddit, String authToken) {
+        String limit = PreferenceManager.getDefaultSharedPreferences(ctx)
+                .getString("no_posts", "10");
         Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
         String builtRequestUrl = accessTokenUrl.appendEncodedPath("r/"+subreddit+"/new.json")
-                .appendQueryParameter("limit", "10")
+                .appendQueryParameter("limit", limit)
                 .build().toString();
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
@@ -123,10 +103,11 @@ public class RedditApi implements RedditConstants {
         return generatedAuthorizedRequest(builtRequestUrl, authToken);
     }
 
-    public static Request getApiSimpleRequest(String objects, String param, String authToken) {
-
+    public static Request getApiSimpleRequest(Context ctx, String objects, String param, String authToken) {
+        String limit = PreferenceManager.getDefaultSharedPreferences(ctx)
+                .getString("no_subreddits", "10");
         Uri.Builder accessTokenUrl = Uri.parse(API_REQUESTS_BASE_PATH).buildUpon();
-        accessTokenUrl.appendQueryParameter("limit", "10");
+        accessTokenUrl.appendQueryParameter("limit",limit);
         accessTokenUrl.appendPath(objects);
 
         if (!param.isEmpty())
@@ -145,4 +126,26 @@ public class RedditApi implements RedditConstants {
                 .build();
     }
 
+    private static Request buildAuthorizationRequest(Context ctx, String accessTokenUrl, RequestBody requestBody) {
+
+        return new Request.Builder()
+                .addHeader("User-Agent", ctx.getResources().getString(R.string.app_name))
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("Authorization", getAuthorizationHeader())
+                .url(accessTokenUrl)
+                .post(requestBody)
+                .build();
+
+    }
+
+    private static String getAuthorizationHeader() {
+        String authString = CLIENT_ID + ":";
+        return "Basic " + Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
+    }
+
+    private static String getAuthorizationUrl() {
+        return Uri.parse(REDDIT_API_BASEPATH).buildUpon()
+                .appendPath(Tags.ACCESS_TOKEN)
+                .build().toString();
+    }
 }

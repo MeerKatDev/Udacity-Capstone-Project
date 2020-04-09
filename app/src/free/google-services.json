@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "371243041330",
+    "firebase_url": "https://reddit-roulette-c7ee0.firebaseio.com",
+    "project_id": "reddit-roulette-c7ee0",
+    "storage_bucket": "reddit-roulette-c7ee0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371243041330:android:36dda6d38f53798c25f22b",
+        "android_client_info": {
+          "package_name": "org.meerkatdev.redditroulette.free"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "371243041330-vpi3fq1vil5m59pn4lgb03ij1pos2ilq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.meerkatdev.redditroulette",
+            "certificate_hash": "ba22d36e4b7cbdbc0327edcd30edb4cb34013b55"
+          }
+        },
+        {
+          "client_id": "371243041330-vj5dp7lmqnsd2b5kpcdiob0k86oc966t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYhYUNCFk2FnBoqv3n0aX2sT9IZdf6DRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "371243041330-vj5dp7lmqnsd2b5kpcdiob0k86oc966t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

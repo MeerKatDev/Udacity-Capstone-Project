@@ -28,14 +28,6 @@ public class PostsListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(view ->
-//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null)
-//                .show()
-//        );
-
-
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).

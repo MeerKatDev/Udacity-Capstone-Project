@@ -5,10 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,7 +98,7 @@ public class SubredditsListFragment extends Fragment {
             rootView.setAdapter(viewAdapter);
             Log.d(TAG, "accessToken: " + accessToken);
             // guest!
-            Request request = RedditApi.getApiSimpleRequest("subreddits", "popular", accessToken);
+            Request request = RedditApi.getApiSimpleRequest(parentActivity, "subreddits", "popular", accessToken);
             populateView(viewAdapter, request);
         }
 
@@ -181,7 +179,7 @@ public class SubredditsListFragment extends Fragment {
         Log.d(TAG, "selected item");
         switch(item.getItemId()) {
             case R.id.sr_sortby_new:
-                request = RedditApi.getApiSimpleRequest("subreddits", "new", accessToken);
+                request = RedditApi.getApiSimpleRequest(parentActivity, "subreddits", "new", accessToken);
                 populateView(viewAdapter, request);
                 break;
             case R.id.sr_sortby_subscribed:
@@ -197,7 +195,7 @@ public class SubredditsListFragment extends Fragment {
                 });
                 break;
             default: // popular is default
-                request = RedditApi.getApiSimpleRequest("subreddits", "popular", accessToken);
+                request = RedditApi.getApiSimpleRequest(parentActivity, "subreddits", "popular", accessToken);
                 populateView(viewAdapter, request);
                 break;
         }

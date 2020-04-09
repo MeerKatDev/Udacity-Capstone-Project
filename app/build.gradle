@@ -35,6 +35,7 @@ android {
 
     lintOptions {
         warningsAsErrors true
+        abortOnError false
         xmlReport false
         htmlReport false
         ignoreWarnings false
@@ -49,6 +50,17 @@ android {
         }
     }
 
+    flavorDimensions "tier"
+    productFlavors {
+        paid {
+            applicationId "org.meerkatdev.redditroulette.paid"
+        }
+
+        free {
+            applicationId "org.meerkatdev.redditroulette.free"
+        }
+
+    }
 
     viewBinding {
         enabled = true

@@ -122,7 +122,7 @@ public class PostsListFragment extends Fragment {
                     PreferenceManager.getDefaultSharedPreferences(getActivity())
                             .getBoolean("sfw", false);
 
-            Request request = RedditApi.getSubredditArticles(mSubredditName, accessToken);
+            Request request = RedditApi.getSubredditArticles(getContext(), mSubredditName, accessToken);
             RedditApi.client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {

@@ -19,30 +19,22 @@
             android:layout_height="?attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/subr_activity_ad"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-6478297406439980/3047120267" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/fragment_subreddits_list"
+        android:name="org.meerkatdev.redditroulette.ui.fragments.SubredditsListFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <fragment
-            android:id="@+id/fragment_subreddits_list"
-            android:name="org.meerkatdev.redditroulette.ui.fragments.SubredditsListFragment"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-
-        <fragment
-            android:id="@+id/fragment_posts_list"
-            android:name="org.meerkatdev.redditroulette.ui.fragments.PostsListFragment"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-
+        android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

@@ -9,6 +9,6 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".SubredditsListActivity"
+    tools:context="org.meerkatdev.redditroulette.SubredditsListActivity"
     tools:itemCount="4"
     tools:listitem="@layout/item_subreddit_list" />
