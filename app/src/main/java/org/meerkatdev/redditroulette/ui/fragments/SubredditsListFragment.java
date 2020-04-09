@@ -1,4 +1,4 @@
-package org.meerkatdev.redditroulette.fragments;
+package org.meerkatdev.redditroulette.ui.fragments;
 
 import android.os.Bundle;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -27,6 +28,7 @@ import org.meerkatdev.redditroulette.utils.Tags;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -46,6 +48,7 @@ public class SubredditsListFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSubredditsListBinding.inflate(inflater, container, false);
+        parentActivity = (SubredditsListActivity) getActivity();
         return binding.getRoot();
     }
 
@@ -57,7 +60,6 @@ public class SubredditsListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onViewCreated");
         RecyclerView rootView = (RecyclerView) view;
-        parentActivity = (SubredditsListActivity) getActivity();
         mTwoPane = getResources().getBoolean(R.bool.is_tablet);
         Bundle extras = parentActivity.getIntent().getExtras();
         // Something is no yes, go back to MainActivity
@@ -85,7 +87,7 @@ public class SubredditsListFragment extends Fragment {
         Request request = RedditApi.getApiSimpleRequest("subreddits", "popular", accessToken);
 
         if(mTwoPane) {
-            subredditsSharedViewModel = ViewModelProviders.of(getActivity()).get(SubredditsSharedViewModel.class);
+            subredditsSharedViewModel = ViewModelProviders.of(parentActivity).get(SubredditsSharedViewModel.class);
             viewAdapter.setViewModel(subredditsSharedViewModel);
         }
         RedditApi.client.newCall(request).enqueue(new Callback() {
@@ -102,12 +104,16 @@ public class SubredditsListFragment extends Fragment {
                     parentActivity.goBackWithShame(parentActivity, "This is not json");
                 else {
                     ArrayList<Subreddit> elements = JSONUtils.parseJsonSubreddits(jsonResp);
-
+                    boolean includeSfw =
+                            PreferenceManager.getDefaultSharedPreferences(parentActivity)
+                                    .getBoolean("sfw", false);
                     if (!elements.isEmpty())
                         parentActivity.runOnUiThread(() -> {
                             if(mTwoPane) {
                                 Log.d(TAG, "Updating!");
-                                subredditsSharedViewModel.saveSubreddits(elements);
+
+                                subredditsSharedViewModel.saveSubreddits(includeSfw ? elements
+                                        : (ArrayList<Subreddit>) elements.stream().filter(a -> !a.notSfw).collect(Collectors.toList()));
                             }
                             viewAdapter.setData(elements);
                         });

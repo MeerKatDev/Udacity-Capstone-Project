@@ -4,32 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import android.util.Log;
-
-import org.jetbrains.annotations.NotNull;
-import org.meerkatdev.redditroulette.adapters.SubredditRecyclerViewAdapter;
-import org.meerkatdev.redditroulette.data.Subreddit;
-import org.meerkatdev.redditroulette.fragments.PostsListFragment;
-import org.meerkatdev.redditroulette.net.RedditApi;
-import org.meerkatdev.redditroulette.utils.JSONUtils;
-import org.meerkatdev.redditroulette.utils.Tags;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
+import android.view.Menu;
 
 /**
  * An activity representing a list of Items. This activity
@@ -82,6 +63,13 @@ public class SubredditsListActivity extends AppCompatActivity {
 //                    .add(R.id.fragment_posts_list, fragment)
 //                    .commit();
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+
+        getMenuInflater().inflate(R.menu.subreddit_sorting, menu);
+        return true;
     }
 
     public void goBackWithShame(Activity activityCtx, String reason) {

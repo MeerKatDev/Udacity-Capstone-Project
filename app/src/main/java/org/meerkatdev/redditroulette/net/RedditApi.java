@@ -9,7 +9,6 @@ import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.utils.Tags;
 
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -17,6 +16,8 @@ import okhttp3.RequestBody;
 public class RedditApi implements RedditConstants {
 
     private static final String TAG = RedditApi.class.getSimpleName();
+
+    public static final String REDDIT_URL = "https://www.reddit.com";
 
     private static final String CLIENT_ID = "a0yCeVL5YxKt_Q";
     private static final String REDIRECT_URI = "http://localhost:4321";

@@ -1,4 +1,4 @@
-package org.meerkatdev.redditroulette.fragments;
+package org.meerkatdev.redditroulette.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +33,7 @@ import org.meerkatdev.redditroulette.utils.Tags;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -50,7 +52,7 @@ public class PostsListFragment extends Fragment {
     private PostRecyclerViewAdapter viewAdapter;
     private SubredditsSharedViewModel subredditsSharedViewModel;
     private FragmentPostsListBinding binding;
-    String accessToken;
+    private String accessToken;
     private boolean mTwoPane;
     public PostsListFragment() { }
 
@@ -93,6 +95,7 @@ public class PostsListFragment extends Fragment {
                 onViewCreation(intent.getExtras());
             }
         }
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -111,12 +114,14 @@ public class PostsListFragment extends Fragment {
             accessToken = args.getString(Tags.ACCESS_TOKEN);
             String mSubredditName = args.getString(Tags.SUBREDDIT_NAME);
             if(!mTwoPane) {
-                Activity activity = this.getActivity();
-                CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+                CollapsingToolbarLayout appBarLayout = getActivity().findViewById(R.id.detail_toolbar);
                 if (appBarLayout != null) {
                     appBarLayout.setTitle("/r/" + mSubredditName);
                 }
             }
+            boolean includeSfw =
+                    PreferenceManager.getDefaultSharedPreferences(getActivity())
+                            .getBoolean("sfw", false);
 
             Request request = RedditApi.getSubredditArticles(mSubredditName, accessToken);
             RedditApi.client.newCall(request).enqueue(new Callback() {
@@ -131,11 +136,12 @@ public class PostsListFragment extends Fragment {
                     Log.d(TAG, "OnResponse, HTTP code: " + response.code());
                     Log.d(TAG, jsonResp);
 
-                    ArrayList<Post> arraySubs = JSONUtils.parseJsonPosts(jsonResp);
-                    if(arraySubs != null)
-                        getActivity().runOnUiThread(() -> {
-                            viewAdapter.setData(arraySubs);
-                        });
+                    ArrayList<Post> elements = JSONUtils.parseJsonPosts(jsonResp);
+                    if(elements != null)
+                        getActivity().runOnUiThread(() ->
+                            viewAdapter.setData(includeSfw ? elements
+                                    : (ArrayList<Post>) elements.stream().filter(a -> !a.notSfw).collect(Collectors.toList()))
+                        );
                 }
             });
         }

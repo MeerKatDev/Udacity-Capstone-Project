@@ -1,4 +1,4 @@
-package org.meerkatdev.redditroulette.fragments;
+package org.meerkatdev.redditroulette.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

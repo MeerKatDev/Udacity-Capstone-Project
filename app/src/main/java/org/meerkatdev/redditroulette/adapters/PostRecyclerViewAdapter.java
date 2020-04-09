@@ -3,6 +3,7 @@ package org.meerkatdev.redditroulette.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,9 @@ import org.meerkatdev.redditroulette.PostViewActivity;
 import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.adapters.viewholders.PostViewHolder;
 import org.meerkatdev.redditroulette.data.Post;
+import org.meerkatdev.redditroulette.data.db.AppDatabase;
+import org.meerkatdev.redditroulette.net.RedditApi;
+import org.meerkatdev.redditroulette.utils.AppExecutors;
 import org.meerkatdev.redditroulette.utils.Tags;
 
 import java.util.List;
@@ -24,7 +28,7 @@ public class PostRecyclerViewAdapter
         extends RecyclerView.Adapter<PostViewHolder> implements RVAdapter<Post> {
 
     private List<Post> mValues;
-    private Activity mParentActivity;
+    private static Activity mParentActivity;
     private boolean mTwoPane;
     int noPosts;
 
@@ -66,12 +70,28 @@ public class PostRecyclerViewAdapter
         Post thisPost = mValues.get(position);
         bindViews(holder, thisPost);
         holder.itemView.setTag(thisPost);
-        holder.itemView.setOnClickListener(mOnClickListener);
+        holder.mContentView.setOnClickListener(mOnClickListener);
+        holder.mTitleView.setOnClickListener(mOnClickListener);
+        holder.mSwitch.setOnCheckedChangeListener((switchView, isChecked) -> {
+            AppExecutors.getInstance().diskIO().execute(() -> {
+                if(isChecked) {
+                    AppDatabase.getInstance(mParentActivity).postDao().insert(thisPost);
+                } else {
+                    AppDatabase.getInstance(mParentActivity).postDao().delete(thisPost);
+                }
+            });
+        });
     }
 
     public static void bindViews(@NonNull PostViewHolder holder, Post thisPost) {
         holder.mTitleView.setText(thisPost.title);
-        holder.mLinkView.setText(thisPost.link);
+        holder.mLinkView.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.setData(Uri.parse(RedditApi.REDDIT_URL + thisPost.link));
+            mParentActivity.startActivity(intent);
+        });
         holder.mAuthorView.setText(thisPost.author);
         if(thisPost.getHint().equals("image") || thisPost.mediaUrl.endsWith(".jpg")) {
             holder.mContentView.setVisibility(View.GONE);

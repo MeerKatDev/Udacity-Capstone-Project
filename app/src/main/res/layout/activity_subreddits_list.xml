@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/fragment_subreddits_list"
-        android:name="org.meerkatdev.redditroulette.fragments.SubredditsListFragment"
+        android:name="org.meerkatdev.redditroulette.ui.fragments.SubredditsListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

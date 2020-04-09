@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
     <fragment
         android:id="@+id/fragment_post_view"
-        android:name="org.meerkatdev.redditroulette.fragments.PostViewFragment"
+        android:name="org.meerkatdev.redditroulette.ui.fragments.PostViewFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

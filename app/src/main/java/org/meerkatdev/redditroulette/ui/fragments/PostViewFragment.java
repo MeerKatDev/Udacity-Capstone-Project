@@ -1,7 +1,8 @@
-package org.meerkatdev.redditroulette.fragments;
+package org.meerkatdev.redditroulette.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import org.meerkatdev.redditroulette.adapters.viewholders.PostViewHolder;
 import org.meerkatdev.redditroulette.data.Post;
 import org.meerkatdev.redditroulette.databinding.FragmentPostViewBinding;
 import org.meerkatdev.redditroulette.utils.Tags;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class PostViewFragment extends Fragment {
 
@@ -30,19 +33,21 @@ public class PostViewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentPostViewBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
+        Intent intent = getActivity().getIntent();
+        View itemRootView = binding.itemPostView.getRoot();
+        if(intent.getExtras().containsKey(Tags.POST)) {
+            mPost = intent.getParcelableExtra(Tags.POST);
+            PostViewHolder viewHolder = new PostViewHolder(itemRootView);
+            Log.d("TAG", "MPost: " + mPost.toString());
+            Log.d("TAG", "itemRootView: " + itemRootView.toString());
+            PostRecyclerViewAdapter.bindViews(viewHolder, mPost);
+        }
         return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View rootView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(rootView, savedInstanceState);
-        Intent intent = getActivity().getIntent();
-        View itemRootView = binding.itemPostView.getRoot();
-        if(intent.getExtras().containsKey(Tags.POST)) {
-            mPost = intent.getParcelableExtra(Tags.POST);
-            PostViewHolder viewHolder = new PostViewHolder(itemRootView);
-            PostRecyclerViewAdapter.bindViews(viewHolder, mPost);
-        }
 
     }
 }

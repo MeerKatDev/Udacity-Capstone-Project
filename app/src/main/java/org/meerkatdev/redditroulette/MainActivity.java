@@ -30,7 +30,7 @@ import okhttp3.Response;
 // TODO Widget selecting one Subreddit only
 // TODO build cache for offline navigation
 
-// TODO Favorites
+// NOT_TODO Favorites (ev. add stuff)
 // TODO Dark/Light themes
 
 // TODO implement jobschedulers itd

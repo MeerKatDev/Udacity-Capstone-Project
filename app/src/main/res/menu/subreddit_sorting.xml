@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/sr_sortby_favorite" android:title="@string/favorites" />
-    <item android:id="@+id/sr_sortby_popular" android:title="@string/favorites" />
-    <item android:id="@+id/sr_sortby_" android:title="@string/favorites" />
+    <item android:id="@+id/sr_sortby_subscribed" android:title="@string/subscribed" />
+    <item android:id="@+id/sr_sortby_popular" android:title="@string/popular" />
+    <item android:id="@+id/sr_sortby_new" android:title="@string/newest_first" />
+    <item android:id="@+id/sr_sortby_saved" android:title="@string/saved" />
 </menu>
