@@ -16,6 +16,8 @@ public class Tags {
     public static final String SUBREDDIT_ID = "subreddit_id";
     public static final String SUBREDDIT_NAME = "subreddit_name";
 
+    public static final String LIST_STATE_KEY = "list-state-key";
+
     public static final String POST = "post";
 
 

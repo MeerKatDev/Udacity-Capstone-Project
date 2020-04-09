@@ -7,11 +7,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +50,10 @@ public class SubredditsListFragment extends Fragment {
     private static final String TAG = SubredditsListFragment.class.getSimpleName();
     private SubredditsListActivity parentActivity;
     private boolean mTwoPane;
+    private RecyclerView rootView;
     private FragmentSubredditsListBinding binding;
+    private LinearLayoutManager layoutManager;
+    Parcelable mListState;
 
     public SubredditsListFragment() { }
 
@@ -74,16 +79,21 @@ public class SubredditsListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onViewCreated");
-        RecyclerView rootView = (RecyclerView) view;
+        rootView = (RecyclerView) view;
         mTwoPane = getResources().getBoolean(R.bool.is_tablet);
         Bundle extras = parentActivity.getIntent().getExtras();
         mFirebaseAnalytics.logEvent("opened_subreddits_fragment", extras);
-        if (extras == null || (!extras.containsKey(Tags.ACCESS_TYPE))) {
-            // Something is no yes, go back to MainActivity
-            parentActivity.finish();
+        if(savedInstanceState!=null && savedInstanceState.containsKey(Tags.LIST_STATE_KEY)) {
+            mListState = savedInstanceState.getParcelable(Tags.LIST_STATE_KEY);
+            //layoutManager.onRestoreInstanceState(mListState); // apparently nulled
+        } else if (extras == null || (!extras.containsKey(Tags.ACCESS_TYPE))) {
+            parentActivity.finish(); // Something is no yes, go back to MainActivity
         } else {
             accessToken = extras.getString(Tags.ACCESS_TOKEN, "");
             viewAdapter = new SubredditRecyclerViewAdapter(parentActivity, mTwoPane, accessToken);
+
+            layoutManager = new LinearLayoutManager(parentActivity);
+            rootView.setLayoutManager(layoutManager);
             rootView.setAdapter(viewAdapter);
             Log.d(TAG, "accessToken: " + accessToken);
             // guest!
@@ -137,6 +147,22 @@ public class SubredditsListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        Log.d(TAG, "resuming state");
+        super.onResume();
+        if (mListState != null) {
+//            layoutManager.onRestoreInstanceState(mListState);
+        }
+    }
+
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        Log.d(TAG, "saving state");
+        mListState = layoutManager.onSaveInstanceState();
+        Log.d(TAG, "saving: " + mListState);
+        state.putParcelable(Tags.LIST_STATE_KEY, mListState);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

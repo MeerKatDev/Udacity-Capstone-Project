@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import org.meerkatdev.redditroulette.data.Subreddit;
@@ -24,4 +25,7 @@ public interface SubredditDAO {
 
     @Delete
     void delete(Subreddit element);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertAll(Subreddit... elements);
 }

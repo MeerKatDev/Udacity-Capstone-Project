@@ -39,7 +39,7 @@ import okhttp3.Response;
 
 // refactoring
 // TODO move onClick Handling to fragments
-
+// add saving list state
 
 public class MainActivity extends AppCompatActivity {
 
