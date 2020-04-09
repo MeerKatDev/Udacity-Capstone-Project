@@ -1,5 +1,6 @@
 package org.meerkatdev.redditroulette;
 
+import android.content.Context;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,8 +22,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
+import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 
 public class MainActivityTest {
+
 
     @Rule
     public ActivityTestRule<MainActivity> activityRule =
@@ -30,7 +34,11 @@ public class MainActivityTest {
 
     @Test
     public void openMainActivity_ChecksFirstTwoRecipesAreDisplayed() {
+        //ApplicationProvider.getApplicationContext().
+        Context app = getApplicationContext();
         Subreddit[] subreddits = new Subreddit[]{};
+        Subreddit mockedList = mock(Subreddit.class);
+
         onView(withText(subreddits[0].name)).check(matches(isDisplayed()));
         onView(withText(subreddits[1].name)).check(matches(isDisplayed()));
     }
@@ -38,17 +46,17 @@ public class MainActivityTest {
     @Test
     public void openMainActivity_ChecksRecyclerViewElementsLengthIsCorrect() {
         //Recipe[] recipes = activityRule.getActivity().getRecipesFromJson(activityRule.getActivity());
-        onView(withId(R.id.rv_recipes)).check(new RecyclerViewItemCountAssertion(recipes.length));
+        //onView(withId(R.id.rv_recipes)).check(new RecyclerViewItemCountAssertion(recipes.length));
     }
 
     @Test
     public void clickRecipeRecyclerView_OpensRecipeStepsActivity() {
-        Recipe[] recipes = activityRule.getActivity().getRecipesFromJson(activityRule.getActivity());
-        Recipe whichRecipe = recipes[0];
-        int recipeStep = 3;
-        onView(withText(whichRecipe.name)).perform(click()); // click on the first element of the list
-        onView(withId(R.id.rv_recipe_steps)).check(matches(isDisplayed()));
-        onView(withId(R.id.rv_recipe_steps)).check(matches(hasDescendant(withText(whichRecipe.steps[recipeStep].shortDescription))));
+//        Recipe[] recipes = activityRule.getActivity().getRecipesFromJson(activityRule.getActivity());
+//        Recipe whichRecipe = recipes[0];
+//        int recipeStep = 3;
+//        onView(withText(whichRecipe.name)).perform(click()); // click on the first element of the list
+//        onView(withId(R.id.rv_recipe_steps)).check(matches(isDisplayed()));
+//        onView(withId(R.id.rv_recipe_steps)).check(matches(hasDescendant(withText(whichRecipe.steps[recipeStep].shortDescription))));
     }
 
     // https://stackoverflow.com/questions/36399787/how-to-count-recyclerview-items-with-espresso

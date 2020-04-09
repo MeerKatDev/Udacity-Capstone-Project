@@ -19,14 +19,15 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
 @SmallTest
 public class SubredditsListActivityTest {
 
     @Rule
-    public IntentsTestRule<RecipeStepsListActivity> mActivityRule = new IntentsTestRule<>(
-            RecipeStepsListActivity.class);
+    public IntentsTestRule<SubredditsListActivity> mActivityRule = new IntentsTestRule<>(
+            SubredditsListActivity.class);
 
     @Before
     public void stubAllExternalIntents() {
@@ -39,17 +40,15 @@ public class SubredditsListActivityTest {
     @Test
     public void clickRecipeStepRecyclerView_Renders() throws InterruptedException {
 
-        onView(withId(R.id.steps_list_fragment)).check(matches(hasDescendant(withId(R.id.rv_recipe_steps))));
+        //onView(withId(R.id.steps_list_fragment)).check(matches(hasDescendant(withId(R.id.rv_recipe_steps))));
     }
-
-
 
     // NOTE: one or the other will fail depending on what device is used for the testing
 
     @Test
-    public void beingOnPhone_AssertStepContentDoesNotExist() {
-        onView(withId(R.id.steps_list_fragment)).check(matches(isDisplayed()));
-        onView(withId(R.id.step_content_fragment)).check(doesNotExist());
+    public void beingOnPhone_AssertPostsListDoesNotExist() {
+        onView(withId(R.id.fragment_subreddits_list)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragment_posts_list)).check(doesNotExist());
     }
 
     // NOTE: how to exclude/include tests based on device used?
@@ -57,7 +56,7 @@ public class SubredditsListActivityTest {
     @Test
     @Ignore
     public void beingOnTablet_AssertStepContentIsDisplayed() {
-        onView(withId(R.id.steps_list_fragment)).check(matches(isDisplayed()));
-        onView(withId(R.id.step_content_fragment)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragment_subreddits_list)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragment_posts_list)).check(matches(isDisplayed()));
     }
 }

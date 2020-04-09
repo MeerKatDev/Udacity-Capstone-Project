@@ -7,6 +7,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+
+// TODO some simple tests with Mockito
 /**
  * Example local unit test, which will execute on the development machine (host).
  *

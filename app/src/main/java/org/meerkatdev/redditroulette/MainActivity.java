@@ -26,18 +26,21 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 // TODO Widget selecting one Subreddit only // need to test probably
-// TODO implement jobschedulers itd
 
 // TODO TESTING
 // TODO adapt for tablets (almost)
 // TODO build cache for offline navigation
 // TODO Dark/Light themes
 
+// For compatibility with
 
+// Mockito
+// https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html
 // refactoring
 // implement Ad as fragment
-// TODO move onClick Handling to fragments
+// move onClick Handling to fragments
 // add saving list state
+// write to the reviewer that the tasks were handled by the OkhTTP
 
 public class MainActivity extends AppCompatActivity {
 

@@ -13,7 +13,7 @@
         android:background="#09C"
         android:contentDescription="@string/subreddit_widget"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/iv_widget_icon_title"
+        app:layout_constraintRight_toRightOf="@id/tv_widget_icon_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
