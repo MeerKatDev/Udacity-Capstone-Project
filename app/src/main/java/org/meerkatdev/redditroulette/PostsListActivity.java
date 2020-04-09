@@ -1,22 +1,11 @@
 package org.meerkatdev.redditroulette;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
-import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 
-import android.view.MenuItem;
-
-import org.meerkatdev.redditroulette.utils.Tags;
+import org.meerkatdev.redditroulette.databinding.ActivityPostsListBinding;
 
 /**
  * Activity, which shows:
@@ -28,12 +17,14 @@ import org.meerkatdev.redditroulette.utils.Tags;
  */
 public class PostsListActivity extends AppCompatActivity {
 
+    private ActivityPostsListBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_posts_list);
-        Toolbar toolbar = findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
+        binding = ActivityPostsListBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.detailToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

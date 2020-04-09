@@ -40,7 +40,7 @@ public class PostViewFragment extends Fragment {
             PostViewHolder viewHolder = new PostViewHolder(itemRootView);
             Log.d("TAG", "MPost: " + mPost.toString());
             Log.d("TAG", "itemRootView: " + itemRootView.toString());
-            PostRecyclerViewAdapter.bindViews(viewHolder, mPost);
+            PostRecyclerViewAdapter.bindSingleView(viewHolder, mPost);
         }
         return rootView;
     }

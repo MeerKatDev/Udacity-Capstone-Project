@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import java.util.List;
 public class PostRecyclerViewAdapter
         extends RecyclerView.Adapter<PostViewHolder> implements RVAdapter<Post> {
 
+    private static final String TAG = PostRecyclerViewAdapter.class.getSimpleName();
+
     private List<Post> mValues;
     private static Activity mParentActivity;
     private boolean mTwoPane;
@@ -37,10 +40,8 @@ public class PostRecyclerViewAdapter
 
     private void onClickExt(Post item, Context context) {
 
-        if (false) {
-        } else {
+        if(!mTwoPane){
             Intent intent = new Intent(context, PostViewActivity.class);
-            // Sending info about subreddit
             intent.putExtra(Tags.POST, item);
             context.startActivity(intent);
         }
@@ -68,22 +69,27 @@ public class PostRecyclerViewAdapter
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post thisPost = mValues.get(position);
-        bindViews(holder, thisPost);
-        holder.itemView.setTag(thisPost);
+        Log.d("TAG", "SETTING ITEM: " + thisPost + ", " + holder.itemView);
+        //holder.itemView.setTag(thisPost);
+        bindSingleView(holder, thisPost);
+        holder.mContentView.setTag(thisPost);
         holder.mContentView.setOnClickListener(mOnClickListener);
+        holder.mTitleView.setTag(thisPost);
         holder.mTitleView.setOnClickListener(mOnClickListener);
         holder.mSwitch.setOnCheckedChangeListener((switchView, isChecked) -> {
             AppExecutors.getInstance().diskIO().execute(() -> {
                 if(isChecked) {
+                    Log.d(TAG, "Inserting " + thisPost.title);
                     AppDatabase.getInstance(mParentActivity).postDao().insert(thisPost);
                 } else {
+                    Log.d(TAG, "Deleting " + thisPost.title);
                     AppDatabase.getInstance(mParentActivity).postDao().delete(thisPost);
                 }
             });
         });
     }
 
-    public static void bindViews(@NonNull PostViewHolder holder, Post thisPost) {
+    public static void bindSingleView(@NonNull PostViewHolder holder, Post thisPost) {
         holder.mTitleView.setText(thisPost.title);
         holder.mLinkView.setOnClickListener(v -> {
             Intent intent = new Intent();
