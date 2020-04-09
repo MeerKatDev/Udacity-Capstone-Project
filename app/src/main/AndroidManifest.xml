@@ -55,8 +55,7 @@
         </activity>
         <activity
             android:name=".SubredditsListActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -66,8 +65,7 @@
         <activity
             android:name=".PostsListActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".SubredditsListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".SubredditsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.meerkatdev.redditroulette.SubredditsListActivity" />

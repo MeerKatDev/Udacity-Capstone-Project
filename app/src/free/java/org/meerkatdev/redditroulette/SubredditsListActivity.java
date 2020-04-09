@@ -29,15 +29,12 @@ public class SubredditsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //MobileAds.initialize(this, "ca-app-pub-6478297406439980~4551773625");
         MobileAds.initialize(this, initializationStatus -> {
             Log.d(TAG, "Initialized MobileAds!");
         });
         binding = ActivitySubredditsListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setSupportActionBar(binding.toolbar);
         // TODO welcome username!
-        binding.toolbar.setTitle(getTitle());
 
         binding.fab.setOnClickListener(view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

@@ -38,4 +38,5 @@
     <string name="subscribed">Subscribed</string>
     <string name="saved">Saved</string>
     <string name="open_in_browser">Open in browser</string>
+    <string name="reddit_user_tag">u/%s</string>
 </resources>

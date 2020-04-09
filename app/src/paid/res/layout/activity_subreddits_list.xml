@@ -7,20 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="org.meerkatdev.redditroulette.SubredditsListActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <fragment
         android:id="@+id/fragment_subreddits_list"
         android:name="org.meerkatdev.redditroulette.ui.fragments.SubredditsListFragment"

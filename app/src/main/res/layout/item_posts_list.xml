@@ -9,11 +9,10 @@
     android:layout_margin="8dp"
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
-    <!--    android:background="@color/colorAccent"-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@android:color/darker_gray"
+        android:background="@color/colorPrimary"
         android:layout_height="wrap_content">
 
         <TextView
@@ -21,20 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:textColor="@color/colorPrimaryDark"
             android:textAlignment="textEnd"
             tools:text="POST AUTHOR"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textAppearance="?attr/textAppearanceListItem" />
 
-
         <TextView
             android:id="@+id/tv_post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:textColor="@color/colorPrimaryDark"
             tools:text="POST TITLE"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_post_author"
@@ -46,6 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_post_title"
             app:layout_constraintBottom_toTopOf="@id/tv_post_link">
+
             <TextView
                 android:id="@+id/tv_post_content"
                 android:layout_width="match_parent"
@@ -62,6 +59,7 @@
                 android:contentDescription="@string/post_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
         </FrameLayout>
 
         <ImageView

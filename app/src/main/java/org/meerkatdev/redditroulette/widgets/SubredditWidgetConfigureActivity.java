@@ -6,10 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
 
 import org.meerkatdev.redditroulette.R;
+import org.meerkatdev.redditroulette.data.Subreddit;
+import org.meerkatdev.redditroulette.databinding.SubredditWidgetConfigureBinding;
 
 /**
  * The configuration screen for the {@link SubredditWidget SubredditWidget} AppWidget.
@@ -19,14 +19,29 @@ public class SubredditWidgetConfigureActivity extends Activity {
     private static final String PREFS_NAME = "org.meerkatdev.redditroulette.widgets.SubredditWidget";
     private static final String PREF_PREFIX_KEY = "appwidget_";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    EditText mAppWidgetText;
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
+
+    private SubredditWidgetConfigureBinding binding;
+
+    public SubredditWidgetConfigureActivity() {
+        super();
+    }
+
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+
+        // Set the result to CANCELED.  This will cause the widget host to cancel
+        // out of the widget placement if the user presses the back button.
+        setResult(RESULT_CANCELED);
+        binding = SubredditWidgetConfigureBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.rvWidgetSubreddits.setOnClickListener( v -> {
             final Context context = SubredditWidgetConfigureActivity.this;
 
-            // When the button is clicked, store the string locally
-            String widgetText = mAppWidgetText.getText().toString();
-            saveTitlePref(context, mAppWidgetId, widgetText);
+            Subreddit subreddit = (Subreddit) v.getTag();
+
+            saveTitlePref(context, mAppWidgetId, subreddit.name);
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -37,11 +52,23 @@ public class SubredditWidgetConfigureActivity extends Activity {
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
             setResult(RESULT_OK, resultValue);
             finish();
-        }
-    };
+        });
 
-    public SubredditWidgetConfigureActivity() {
-        super();
+        // Find the widget id from the intent.
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            mAppWidgetId = extras.getInt(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+
+        // If this activity was started with an intent without an app widget ID, finish with an error.
+        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+            return;
+        }
+
+        //mAppWidgetText.setText(loadTitlePref(SubredditWidgetConfigureActivity.this, mAppWidgetId));
     }
 
     // Write the prefix to the SharedPreferences object for this widget
@@ -69,35 +96,5 @@ public class SubredditWidgetConfigureActivity extends Activity {
         prefs.apply();
     }
 
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-
-        // Set the result to CANCELED.  This will cause the widget host to cancel
-        // out of the widget placement if the user presses the back button.
-        setResult(RESULT_CANCELED);
-
-        setContentView(R.layout.subreddit_widget_configure);
-        //mAppWidgetText = findViewById(R.id.appwidget_text);
-        findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
-
-        // TODO set GridView here
-
-        // Find the widget id from the intent.
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            mAppWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        }
-
-        // If this activity was started with an intent without an app widget ID, finish with an error.
-        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            finish();
-            return;
-        }
-
-        mAppWidgetText.setText(loadTitlePref(SubredditWidgetConfigureActivity.this, mAppWidgetId));
-    }
 }
 

@@ -1,6 +1,5 @@
 package org.meerkatdev.redditroulette.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,17 +19,14 @@ import org.meerkatdev.redditroulette.PostViewActivity;
 import org.meerkatdev.redditroulette.R;
 import org.meerkatdev.redditroulette.adapters.viewholders.PostViewHolder;
 import org.meerkatdev.redditroulette.data.Post;
-import org.meerkatdev.redditroulette.data.SavedSubreddit;
 import org.meerkatdev.redditroulette.data.Subreddit;
 import org.meerkatdev.redditroulette.data.db.AppDatabase;
 import org.meerkatdev.redditroulette.net.RedditApi;
 import org.meerkatdev.redditroulette.ui.OfflinePostsViewModel;
-import org.meerkatdev.redditroulette.ui.SubredditsSharedViewModel;
 import org.meerkatdev.redditroulette.utils.AppExecutors;
 import org.meerkatdev.redditroulette.utils.Tags;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class PostRecyclerViewAdapter
@@ -97,7 +91,6 @@ public class PostRecyclerViewAdapter
 
         holder.mContentView.setOnClickListener(mOnClickListener);
         holder.mTitleView.setOnClickListener(mOnClickListener);
-        Log.d("SavedPosts", "savedPost: " + savedPostIds[0]);
         Arrays.sort(savedPostIds);
         Log.d("SavedPosts", "savedPosts size: " + savedPostIds.length + ", contained? " + Arrays.binarySearch(savedPostIds, thisPost.redditId));
         holder.mSwitch.setChecked(Arrays.binarySearch(savedPostIds, thisPost.redditId) > (-1));
@@ -125,6 +118,7 @@ public class PostRecyclerViewAdapter
 
     public static void bindSingleView(@NonNull PostViewHolder holder, Post thisPost) {
         holder.mTitleView.setText(thisPost.title);
+
         holder.mLinkView.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
@@ -132,7 +126,10 @@ public class PostRecyclerViewAdapter
             intent.setData(Uri.parse(RedditApi.REDDIT_URL + thisPost.link));
             mParentActivity.startActivity(intent);
         });
-        holder.mAuthorView.setText(thisPost.author);
+
+        String formattedAuthor = mParentActivity.getString(R.string.reddit_user_tag, thisPost.author);
+        holder.mAuthorView.setText(formattedAuthor);
+
         if(thisPost.getHint().equals("image") || thisPost.mediaUrl.endsWith(".jpg")) {
             holder.mContentView.setVisibility(View.GONE);
             holder.mPostImageView.setVisibility(View.VISIBLE);

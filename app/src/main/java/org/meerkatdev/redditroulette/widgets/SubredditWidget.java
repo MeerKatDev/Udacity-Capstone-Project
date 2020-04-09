@@ -1,11 +1,18 @@
 package org.meerkatdev.redditroulette.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
+import androidx.preference.PreferenceManager;
+
+import org.meerkatdev.redditroulette.PostsListActivity;
 import org.meerkatdev.redditroulette.R;
+import org.meerkatdev.redditroulette.utils.Tags;
 
 /**
  * Implementation of App Widget functionality.
@@ -16,10 +23,24 @@ public class SubredditWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = SubredditWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
+        String widgetText = SubredditWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.subreddit_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        String subredditName = widgetText; // ???
+        String accessToken = sharedPreferences.getString(Tags.ACCESS_TOKEN, "");
+
+        Intent intent = new Intent(context, PostsListActivity.class);
+        intent.putExtra(Tags.ACCESS_TOKEN, accessToken);
+        intent.putExtra(Tags.SUBREDDIT_NAME, subredditName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        views.setTextViewText(R.id.tv_widget_icon_title, subredditName);
+        views.setOnClickPendingIntent(R.id.iv_widget_icon_image, pendingIntent);
+        views.setOnClickPendingIntent(R.id.tv_widget_icon_title, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -41,14 +62,5 @@ public class SubredditWidget extends AppWidgetProvider {
         }
     }
 
-    @Override
-    public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-    }
 }
 

@@ -25,18 +25,17 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
+// TODO Widget selecting one Subreddit only // need to test probably
+// TODO implement jobschedulers itd
+
+// TODO TESTING
 // TODO adapt for tablets (almost)
-
-// TODO Widget selecting one Subreddit only
 // TODO build cache for offline navigation
-
-// NOT_TODO Favorites (ev. add stuff)
 // TODO Dark/Light themes
 
-// TODO implement jobschedulers itd
-// TODO TESTING
 
 // refactoring
+// implement Ad as fragment
 // TODO move onClick Handling to fragments
 // add saving list state
 
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View rootView = binding.getRoot();
         setContentView(rootView);
-        oauthPreference =  getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
+        oauthPreference = getSharedPreferences(Tags.OAUTH_DATA, Context.MODE_PRIVATE);
         mContext = this;
         // not first access
         if(preferenceHasNonEmptyToken()) {

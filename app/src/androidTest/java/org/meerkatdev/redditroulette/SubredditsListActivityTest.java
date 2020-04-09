@@ -1,4 +1,4 @@
-package org.meerkatdev.bakingapp;
+package org.meerkatdev.redditroulette;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -18,11 +19,10 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.isInternal;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
 @SmallTest
-public class RecipeStepsListActivityTest {
+public class SubredditsListActivityTest {
 
     @Rule
     public IntentsTestRule<RecipeStepsListActivity> mActivityRule = new IntentsTestRule<>(

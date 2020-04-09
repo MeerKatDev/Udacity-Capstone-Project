@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,25 +9,18 @@
     tools:context="org.meerkatdev.redditroulette.SubredditsListActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+        android:layout_height="wrap_content">
 
         <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             android:id="@+id/subr_activity_ad"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/colorPrimaryDark"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-6478297406439980/3047120267" />
+            ads:adUnitId="ca-app-pub-6478297406439980/3047120267"
+            xsi:schemaLocation="http://schemas.android.com/apk/res-auto" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,7 +28,8 @@
         android:id="@+id/fragment_subreddits_list"
         android:name="org.meerkatdev.redditroulette.ui.fragments.SubredditsListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_subreddits_list" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

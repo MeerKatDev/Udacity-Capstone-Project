@@ -1,4 +1,4 @@
-package org.meerkatdev.bakingapp;
+package org.meerkatdev.redditroulette;
 
 import android.view.View;
 
@@ -10,7 +10,7 @@ import androidx.test.rule.ActivityTestRule;
 import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
-import org.meerkatdev.bakingapp.data.Recipe;
+import org.meerkatdev.redditroulette.data.Subreddit;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -30,14 +30,14 @@ public class MainActivityTest {
 
     @Test
     public void openMainActivity_ChecksFirstTwoRecipesAreDisplayed() {
-        Recipe[] recipes = activityRule.getActivity().getRecipesFromJson(activityRule.getActivity());
-        onView(withText(recipes[0].name)).check(matches(isDisplayed()));
-        onView(withText(recipes[1].name)).check(matches(isDisplayed()));
+        Subreddit[] subreddits = new Subreddit[]{};
+        onView(withText(subreddits[0].name)).check(matches(isDisplayed()));
+        onView(withText(subreddits[1].name)).check(matches(isDisplayed()));
     }
 
     @Test
     public void openMainActivity_ChecksRecyclerViewElementsLengthIsCorrect() {
-        Recipe[] recipes = activityRule.getActivity().getRecipesFromJson(activityRule.getActivity());
+        //Recipe[] recipes = activityRule.getActivity().getRecipesFromJson(activityRule.getActivity());
         onView(withId(R.id.rv_recipes)).check(new RecyclerViewItemCountAssertion(recipes.length));
     }
 
