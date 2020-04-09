@@ -2,8 +2,9 @@
 
 ## Reddit roulette
 
-An App that lets you download s
-
+An App that lets you download subreddits and pick random posts from each of them.
+Supposedly, there are several heuristics for picking the posts, 
+but initially they're picking just using a uniform random distribution.
 
 It features:
 
